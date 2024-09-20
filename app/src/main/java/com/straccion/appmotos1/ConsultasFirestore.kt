@@ -1,12 +1,12 @@
 package com.straccion.appmotos1
 
-import android.content.Context
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.SetOptions
-import java.nio.charset.StandardCharsets
+
+
 fun authenticateUser(onSuccess: () -> Unit) {
     val auth = FirebaseAuth.getInstance()
     if (auth.currentUser == null) {

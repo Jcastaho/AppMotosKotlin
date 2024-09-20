@@ -69,6 +69,7 @@ import androidx.compose.ui.util.lerp
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.straccion.appmotos1.presentation.components.DefaultOutlinedTextField
 import kotlinx.coroutines.delay
 import java.text.NumberFormat
 import java.util.Locale
@@ -89,21 +90,20 @@ fun VistaMotos(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        OutlinedTextField(
+        DefaultOutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp),
             value = state.searchQuery,
             onValueChange = { query ->
                 onSearch(query)
             },
-            label = { Text("Buscar motos") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp),
-            singleLine = true,  // Asegura que el TextField sea de una sola línea
+            label = "Buscar motos",
+            singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Search
             )
         )
-
         when {
             state.isLoading -> CircularProgressIndicator(
                 modifier = Modifier
@@ -216,7 +216,6 @@ fun PantallaDetalles(viewModel: MotosViewModel) {
     val selectedMoto = state.selectedMotos
     val pagerState = rememberPagerState(pageCount = { state.imagenesMostradas.size })
     var selectedImage by remember { mutableStateOf<Pair<String, Int>?>(null) }
-
 
     // Si no hay una moto seleccionada, no hacemos nada
     LaunchedEffect(state.colorSeleccionado) {
@@ -395,7 +394,8 @@ fun PantallaDetalles(viewModel: MotosViewModel) {
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         ),
-                        modifier = Modifier.padding(top = 8.dp)
+                        modifier = Modifier
+                            .padding(top = 8.dp)
                             .align(Alignment.CenterHorizontally)
                     )
                     Text(

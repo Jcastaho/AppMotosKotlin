@@ -1,4 +1,4 @@
-package com.straccion.appmotos1.ui.theme
+package com.straccion.appmotos1.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,9 +1,6 @@
 package com.straccion.appmotos1
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 
 
 class SharedPreferencesManager(context: Context) {

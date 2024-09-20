@@ -1,7 +1,6 @@
-package com.straccion.appmotos1.vistabasededatos
+package com.straccion.appmotos1.presentation.screens.vistabasededatos
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,19 +20,16 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -46,6 +41,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.straccion.appmotos1.CategoriaMotos
 import com.straccion.appmotos1.MotosState
+import com.straccion.appmotos1.presentation.components.DefaultOutlinedTextField
 
 @Composable
 fun ModRegistro(
@@ -57,19 +53,19 @@ fun ModRegistro(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        OutlinedTextField(
-            value = state.searchQuery,
-            onValueChange = { query ->
-                onSearch(query)
-            },
-            label = { Text("Buscar motos") },
+        DefaultOutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp),
-            singleLine = true,  // Asegura que el TextField sea de una sola línea
+            value = state.searchQuery,
+            singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Search
-            )
+            ),
+            onValueChange = { query ->
+                onSearch(query)
+            },
+            label = "Buscar motos"
         )
         when {
             state.isLoading -> CircularProgressIndicator(

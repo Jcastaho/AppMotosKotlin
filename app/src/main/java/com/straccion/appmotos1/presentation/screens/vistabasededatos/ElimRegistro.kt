@@ -1,4 +1,4 @@
-package com.straccion.appmotos1.vistabasededatos
+package com.straccion.appmotos1.presentation.screens.vistabasededatos
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,13 +26,9 @@ import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,11 +44,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.straccion.appmotos1.AlertDialogExitoso
-import com.straccion.appmotos1.AlertDialogPregunta
+import com.straccion.appmotos1.presentation.components.AlertDialogExitoso
+import com.straccion.appmotos1.presentation.components.AlertDialogPregunta
 import com.straccion.appmotos1.CategoriaMotos
 import com.straccion.appmotos1.MotosViewModel
 import com.straccion.appmotos1.MotosState
+import com.straccion.appmotos1.presentation.components.DefaultIconButton
+import com.straccion.appmotos1.presentation.components.DefaultOutlinedTextField
 
 @Composable
 fun ElimRegistro(
@@ -64,20 +62,20 @@ fun ElimRegistro(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        OutlinedTextField(
-            value = state.searchQuery,
-            onValueChange = { query ->
-                onSearch(query)
-            },
-            label = { Text("Buscar motos") },
+        DefaultOutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp),
-            singleLine = true,  // Asegura que el TextField sea de una sola línea
+            value = state.searchQuery,
+            singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Search
-            )
-        )
+            ),
+            onValueChange = { query ->
+                onSearch(query)
+            },
+            label = "Buscar motos"
+        )        
         when {
             state.isLoading -> CircularProgressIndicator(
                 modifier = Modifier
@@ -165,30 +163,23 @@ fun ItemsCategory(motos: CategoriaMotos, viewModel: MotosViewModel, state: Motos
             ) {
                 Row {
                     if (motos.visible) {
-                        IconButton(onClick = {
-                            showConfirmDialog2 = true
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.HideImage,
-                                contentDescription = "Ocultar",
-                            )
-                        }
+                        DefaultIconButton(
+                            onClick = { showConfirmDialog2 = true },
+                            icon = Icons.Default.HideImage,
+                            contentDescription = "Ocultar"
+                        )
                     } else {
-                        IconButton(onClick = {
-                            showConfirmDialog2 = true
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.RemoveRedEye,
-                                contentDescription = "Ocultar",
-                            )
-                        }
-                    }
-                    IconButton(onClick = { showConfirmDialog = true }) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Delete",
+                        DefaultIconButton(
+                            onClick = { showConfirmDialog2 = true },
+                            icon = Icons.Default.RemoveRedEye,
+                            contentDescription = "Ocultar"
                         )
                     }
+                    DefaultIconButton(
+                        onClick = { showConfirmDialog = true },
+                        icon = Icons.Default.Delete,
+                        contentDescription = "Delete"
+                    )
                 }
                 // Evitar que el diálogo se muestre repetidamente
                 if (showConfirmDialog2) {

@@ -1,12 +1,10 @@
-package com.straccion.appmotos1.favoritos
+package com.straccion.appmotos1.presentation.screens.vistafavoritos
 
 import android.content.res.Configuration
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,8 +26,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -52,9 +48,9 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.straccion.appmotos1.CategoriaMotos
-import com.straccion.appmotos1.CategoryItem
 import com.straccion.appmotos1.MotosState
 import com.straccion.appmotos1.MotosViewModel
+import com.straccion.appmotos1.presentation.components.DefaultIconButton
 
 
 @Composable
@@ -99,9 +95,11 @@ fun VistaMotosFavoritos(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        IconButton(onClick = { viewModel.deselectAllMotos() }) {
-                            Icon(Icons.Default.Close, contentDescription = "Cancelar selección")
-                        }
+                        DefaultIconButton(
+                            onClick = { viewModel.deselectAllMotos() },
+                            icon = Icons.Default.Close,
+                            contentDescription = "Cancelar selección"
+                        )
                         Text("${selectedItems.size} seleccionados", modifier = Modifier.padding(top = 10.dp))  // Actualiza automáticamente según la selección
                         TextButton(onClick = { viewModel.selectAllMotos(motosFavoritas) }) {
                             Text("Seleccionar todo")

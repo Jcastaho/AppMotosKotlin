@@ -1,22 +1,16 @@
-package com.straccion.appmotos1
+package com.straccion.appmotos1.presentation.components
 
-import android.graphics.drawable.Icon
 import android.os.Build.VERSION.SDK_INT
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,7 +43,8 @@ fun AlertDialogExitoso(
             )
         },
         title = {
-            Text(color = MaterialTheme.colorScheme.primary,
+            Text(
+                color = MaterialTheme.colorScheme.primary,
                 text = dialogTitle
             )
         },
@@ -63,9 +58,7 @@ fun AlertDialogExitoso(
             onDismissRequest
         },
         confirmButton = {
-            Button(
-                onClick = onConfirmation,
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+            DefaultButton(
                 modifier = Modifier
                     .clip(RoundedCornerShape(22.dp)) // Botón con bordes redondeados
                     .background(
@@ -73,9 +66,10 @@ fun AlertDialogExitoso(
                             colors = listOf(Color(0xFF2193b0), Color(0xFF6dd5ed))
                         )
                     ),
-                ) {
-                Text(text = "Confirmar")
-            }
+                text = "Confirmar",
+                contentPadding = PaddingValues(horizontal = 25.dp, vertical = 8.dp),
+                onClick = { onConfirmation }
+            )
         }
     )
 }
@@ -129,7 +123,6 @@ fun AlertDialogPregunta(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
-
             )
         },
         text = {
@@ -141,9 +134,7 @@ fun AlertDialogPregunta(
         },
         onDismissRequest = onDismissRequest,
         confirmButton = {
-            Button(
-                onClick = onConfirmation,
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+            DefaultButton(
                 modifier = Modifier
                     .clip(RoundedCornerShape(22.dp)) // Botón con bordes redondeados
                     .background(
@@ -151,22 +142,17 @@ fun AlertDialogPregunta(
                             colors = listOf(Color(0xFF2193b0), Color(0xFF6dd5ed))
                         )
                     ),
-            ) {
-                Text(
-                    text = "Confirmar"
-                )
-            }
+                text = "Confirmar",
+                contentPadding = PaddingValues(horizontal = 25.dp, vertical = 8.dp),
+                onClick = { onConfirmation }
+            )
         },
         dismissButton = {
-            OutlinedButton(
-                onClick = onDismissRequest,
-                modifier = Modifier.clip(RoundedCornerShape(22.dp)) // Botón con bordes redondeados
-            ) {
-                Text(
-                    color = MaterialTheme.colorScheme.primary,
-                    text = "Cancelar"
-                )
-            }
+            DefaultOutlinedButton(
+                modifier =  Modifier.clip(RoundedCornerShape(22.dp)), // Botón con bordes redondeados
+                text = "Cancelar",
+                onClick = onDismissRequest
+            )
         }
     )
 }

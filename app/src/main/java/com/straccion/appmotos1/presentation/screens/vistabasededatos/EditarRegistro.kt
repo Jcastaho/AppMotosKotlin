@@ -1,10 +1,9 @@
-package com.straccion.appmotos1.vistabasededatos
+package com.straccion.appmotos1.presentation.screens.vistabasededatos
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,13 +17,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -51,10 +46,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.straccion.appmotos1.AlertDialogExitoso
-import com.straccion.appmotos1.AlertDialogPregunta
+import com.straccion.appmotos1.presentation.components.AlertDialogExitoso
+import com.straccion.appmotos1.presentation.components.AlertDialogPregunta
 import com.straccion.appmotos1.MotosState
 import com.straccion.appmotos1.MotosViewModel
+import com.straccion.appmotos1.presentation.components.DefaultButton
+import com.straccion.appmotos1.presentation.components.DefaultIconButton
+import com.straccion.appmotos1.presentation.components.DefaultOutlinedTextField
 
 
 @Composable
@@ -155,11 +153,7 @@ fun EditarRegistro(viewModel: MotosViewModel, state: MotosState) {
                                     .padding(vertical = 8.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                OutlinedTextField(
-                                    value = claveLocal,
-                                    onValueChange = { nuevaClave ->
-                                        claveLocal = nuevaClave
-                                    },
+                                DefaultOutlinedTextField(
                                     modifier = Modifier
                                         .weight(1f)
                                         .padding(end = 4.dp)
@@ -175,13 +169,14 @@ fun EditarRegistro(viewModel: MotosViewModel, state: MotosState) {
                                             }
                                             isFocused =
                                                 focusState.isFocused // Actualiza el estado del foco
-                                        }
-                                )
-                                OutlinedTextField(
-                                    value = valorLocal.toString(),
-                                    onValueChange = { nuevoValor ->
-                                        valorLocal = nuevoValor
+                                        },
+                                    value = claveLocal,
+                                    onValueChange = { nuevaClave ->
+                                        claveLocal = nuevaClave
                                     },
+                                    label = null
+                                )
+                                DefaultOutlinedTextField(
                                     modifier = Modifier
                                         .weight(1f)
                                         .padding(start = 6.dp)
@@ -197,16 +192,20 @@ fun EditarRegistro(viewModel: MotosViewModel, state: MotosState) {
                                             }
                                             isFocused =
                                                 focusState.isFocused // Actualiza el estado del foco
-                                        }
-                                )
-                                IconButton(
-                                    onClick = {
-                                        viewModel.eliminarCampo(index)
+                                        },
+                                    value = valorLocal.toString(),
+                                    onValueChange = { nuevoValor ->
+                                        valorLocal = nuevoValor
                                     },
-                                    modifier = Modifier.align(Alignment.CenterVertically)
-                                ) {
-                                    Icon(Icons.Default.Close, contentDescription = "Eliminar campo")
-                                }
+                                    label = null
+                                )
+                                //esta parte esta eliminando mal
+                                DefaultIconButton(
+                                    modifier = Modifier.align(Alignment.CenterVertically),
+                                    onClick = { viewModel.eliminarCampo(index) },
+                                    icon = Icons.Default.Close,
+                                    contentDescription = "Eliminar campo"
+                                )
                             }
                         }
                     }
@@ -225,14 +224,7 @@ fun EditarRegistro(viewModel: MotosViewModel, state: MotosState) {
                         Icon(Icons.Default.Add, contentDescription = "Agregar campo")
                     }
                 }
-
-                Button(
-                    onClick = {
-                        focusManager.clearFocus()
-                        showConfirmDialog = true
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent), // Usamos containerColor en vez de backgroundColor
-                    contentPadding = PaddingValues(),
+                DefaultButton(
                     modifier = Modifier
                         .padding(16.dp)
                         .fillMaxWidth()
@@ -242,11 +234,13 @@ fun EditarRegistro(viewModel: MotosViewModel, state: MotosState) {
                                 colors = listOf(Color(0xFF2193b0), Color(0xFF6dd5ed))
                             )
                         )
-                        .shadow(8.dp, RoundedCornerShape(28.dp)) // Sombra para efecto 3D
+                        .shadow(8.dp, RoundedCornerShape(28.dp)), // Sombra para efecto 3D
+                    text = "Actualizar",
+                    onClick = {
+                        focusManager.clearFocus()
+                        showConfirmDialog = true
+                    }
                 )
-                {
-                    Text(text = "Actualizar")
-                }
             }
         }
     }

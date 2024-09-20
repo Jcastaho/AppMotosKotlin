@@ -1,9 +1,8 @@
-package com.straccion.appmotos1.vistamimotoideal
+package com.straccion.appmotos1.presentation.screens.vistamimotoideal
 
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -13,6 +12,7 @@ import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,12 +20,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,12 +34,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.straccion.appmotos1.MotosState
-import com.straccion.appmotos1.ui.theme.Purple400
+import com.straccion.appmotos1.presentation.components.DefaultButton
 
 data class Question(
     val text: String,
@@ -88,7 +83,9 @@ fun Preguntas(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            Button(
+            DefaultButton(
+                modifier = Modifier.animateContentSize(),
+                text =if (currentQuestionIndex < questions.size - 1) "Siguiente" else "Finalizar",
                 onClick = {
                     if (currentQuestionIndex < questions.size - 1) {
                         currentQuestionIndex++
@@ -98,16 +95,11 @@ fun Preguntas(
                         onComplete()
                     }
                 },
-                colors = ButtonDefaults.buttonColors(Color(0xFF049AC7)),
+                fontSize = 18,
                 enabled = isAnswered,
-                modifier = Modifier.animateContentSize()
-            ) {
-                Text(
-                    if (currentQuestionIndex < questions.size - 1) "Siguiente" else "Finalizar",
-                    fontSize = 18.sp
-                )
-            }
-
+                colors = ButtonDefaults.buttonColors(Color(0xFF049AC7)),
+                contentPadding = PaddingValues(horizontal = 25.dp, vertical = 10.dp)
+            )
             LinearProgressIndicator(
                 progress = (currentQuestionIndex + 1).toFloat() / questions.size,
                 modifier = Modifier
@@ -159,13 +151,7 @@ fun OptionButton(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    val backgroundColor by animateColorAsState(
-        if (isSelected) MaterialTheme.colorScheme.primary else Color.LightGray
-    )
-
-    Button(
-        onClick = onClick,
-        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+    DefaultButton(
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp)
@@ -178,7 +164,8 @@ fun OptionButton(
                     ) else listOf(Color(0xFF5A5A5A), Color(0xFF3A3A3A))
                 )
             ),
-    ) {
-        Text(text = text, fontSize = 16.sp)
-    }
+        text = text,
+        fontSize = 16,
+        onClick = { onClick() }
+    )
 }

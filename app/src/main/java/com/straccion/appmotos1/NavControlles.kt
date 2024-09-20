@@ -31,7 +31,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
@@ -56,18 +55,19 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
-import com.straccion.appmotos1.compararmotosmenu.CompararMotosMenu
+import com.straccion.appmotos1.presentation.screens.vistacompararmotos.CompararMotosMenu
 import com.straccion.appmotos1.estadistica.VistaEstadistica
-import com.straccion.appmotos1.favoritos.VistaMotosFavoritos
-import com.straccion.appmotos1.vistabasededatos.AggRegistro
-import com.straccion.appmotos1.vistabasededatos.EditarRegistro
-import com.straccion.appmotos1.vistabasededatos.ElimRegistro
-import com.straccion.appmotos1.vistabasededatos.ModRegistro
-import com.straccion.appmotos1.vistabasededatos.VistaBasedeDatos
-import com.straccion.appmotos1.vistamimotoideal.VistaPreguntasFiltro
+import com.straccion.appmotos1.presentation.screens.vistafavoritos.VistaMotosFavoritos
+import com.straccion.appmotos1.presentation.screens.vistabasededatos.AggRegistro
+import com.straccion.appmotos1.presentation.screens.vistabasededatos.EditarRegistro
+import com.straccion.appmotos1.presentation.screens.vistabasededatos.ElimRegistro
+import com.straccion.appmotos1.presentation.screens.vistabasededatos.ModRegistro
+import com.straccion.appmotos1.presentation.screens.vistabasededatos.VistaBasedeDatos
+import com.straccion.appmotos1.presentation.screens.vistamimotoideal.VistaPreguntasFiltro
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun PantallaInicial(navController: NavHostController) {
     val viewModel: MotosViewModel = viewModel()
