@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Mi Moto Ideal Kotlin </string>
+    <string name="marca">Marca </string>
+    <string name="fabricante">Fabricante </string>
+    <string name="categoria">Categoria </string>
+    <string name="nombreMoto">Nombre de la Moto</string>
+    <string name="elegirMoto">Elegir Moto</string>
+</resources>

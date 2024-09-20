@@ -1,0 +1,105 @@
+{
+  "project_info": {
+    "project_number": "225103779367",
+    "project_id": "appmotos-fc479",
+    "storage_bucket": "appmotos-fc479.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:225103779367:android:44ce7bcd98ede27e562002",
+        "android_client_info": {
+          "package_name": "com.eje.as"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAm6C6y1CSAq0V_cfKh5VVSl6se93CBIkI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:225103779367:android:ee851ecdc10714ef562002",
+        "android_client_info": {
+          "package_name": "com.example.jetpacrecicyler"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAm6C6y1CSAq0V_cfKh5VVSl6se93CBIkI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:225103779367:android:d157658305344654562002",
+        "android_client_info": {
+          "package_name": "com.example.motosusers"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAm6C6y1CSAq0V_cfKh5VVSl6se93CBIkI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:225103779367:android:6eb4a2680d8e74cd562002",
+        "android_client_info": {
+          "package_name": "com.straccion.appmotos1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAm6C6y1CSAq0V_cfKh5VVSl6se93CBIkI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:225103779367:android:da23cdc4ae9b2300562002",
+        "android_client_info": {
+          "package_name": "com.straccion.motos_admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAm6C6y1CSAq0V_cfKh5VVSl6se93CBIkI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
