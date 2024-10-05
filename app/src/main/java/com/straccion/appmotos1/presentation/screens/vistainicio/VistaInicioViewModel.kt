@@ -1,13 +1,12 @@
 package com.straccion.appmotos1.presentation.screens.vistainicio
 
-import android.util.Log
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.FirebaseFirestore
 import com.straccion.appmotos1.domain.model.CategoriaMotos
 import com.straccion.appmotos1.domain.model.Response
 import com.straccion.appmotos1.domain.use_cases.auth.AuthUsesCases
@@ -78,5 +77,12 @@ class VistaInicioViewModel @Inject constructor(
             }
         }
         _motosResponse.value = Response.Success(filteredList)
+    }
+
+    //esto es para mostrar los detalles de las motos
+    private val _motos = mutableStateOf<List<CategoriaMotos>>(emptyList())
+    val motos: State<List<CategoriaMotos>> = _motos
+    fun getMotoById(id: String): CategoriaMotos? {
+        return _motos.value.find { it.id == id }
     }
 }

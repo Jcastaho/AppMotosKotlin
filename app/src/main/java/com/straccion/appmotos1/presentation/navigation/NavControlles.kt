@@ -306,16 +306,8 @@ fun PantallaInicial(navController: NavHostController) {
                 ) {
                     composable(Pantallas.PantallaPrincipal.route) {
                         viewModel.ReiniciarQuestionnaire()
-                        VistaMotosScreen(
-                            onMotoClick = { moto ->
-                                viewModel.selectMoto(moto)
-                                navController.navigate(
-                                    Pantallas.PantallaDetallesMoto.createRoute(
-                                        moto.id
-                                    )
-                                )
-                            }
-                        )
+//                        VistaMotosScreen(
+//                        )
                     }
                     composable(
                         route = Pantallas.PantallaDetallesMoto.route,
@@ -329,7 +321,7 @@ fun PantallaInicial(navController: NavHostController) {
                         }
 
                         if (state.selectedMotos != null) {
-                            DetallesMotoScreen(viewModel = viewModel)
+                            //DetallesMotoScreen(viewModel = viewModel)
                         } else {
                             // Manejar el caso en que no se encuentra la moto
                             Text("Moto no encontrada")

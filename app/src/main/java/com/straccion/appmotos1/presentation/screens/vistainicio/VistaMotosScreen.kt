@@ -13,16 +13,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.straccion.appmotos1.domain.model.CategoriaMotos
-import com.straccion.appmotos1.MotosState
 import com.straccion.appmotos1.presentation.components.DefaultOutlinedTextField
-import com.straccion.appmotos1.presentation.screens.vistainicio.components.Vista
+import com.straccion.appmotos1.presentation.screens.vistainicio.components.GetMotosInicio
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun VistaMotosScreen(
+    navHostController: NavHostController,
     viewModel: VistaInicioViewModel = hiltViewModel(),
-    onMotoClick: (CategoriaMotos) -> Unit = {}
 ) {
     val busqueda = viewModel.busqueda
     Scaffold(
@@ -51,7 +51,7 @@ fun VistaMotosScreen(
         content = { paddingValues ->
             // Pasar el paddingValues para evitar que el contenido se superponga con el topBar
             Box(modifier = Modifier.padding(top = paddingValues.calculateTopPadding())) {
-                Vista(onMotoClick)
+                GetMotosInicio(navHostController)
             }
         }
 

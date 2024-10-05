@@ -19,17 +19,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.straccion.appmotos1.domain.model.CategoriaMotos
 import com.straccion.appmotos1.presentation.components.DefaultAsyncImage
+import com.straccion.appmotos1.presentation.navigation.DrawerScreen
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
-fun MotosCard(motos: CategoriaMotos, onClick: () -> Unit) {
+fun MotosCard(
+    navHostController: NavHostController,
+    motos: CategoriaMotos
+) {
     Card(
         modifier = Modifier
             .padding(4.dp)
             .fillMaxWidth()
             .aspectRatio(0.7f)
-            .clickable(onClick = onClick),
+            .clickable{
+                navHostController.navigate(
+                    route = DrawerScreen.Inicio.DetallesMoto.passMotos(URLEncoder.encode(motos.toJson(), StandardCharsets.UTF_8.toString()))
+                )
+            },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(

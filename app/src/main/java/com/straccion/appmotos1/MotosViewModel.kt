@@ -48,9 +48,6 @@ class MotosViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    init {
-
-    }
     private fun addToSelected(moto: CategoriaMotos) {
         if (!_selectedItems.value.contains(moto)) {
             _selectedItems.value += moto

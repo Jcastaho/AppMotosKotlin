@@ -14,8 +14,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.straccion.appmotos1.MotosViewModel
 import com.straccion.appmotos1.presentation.screens.vistabasededatos.AggRegistro
 import com.straccion.appmotos1.presentation.screens.vistabasededatos.EditarRegistro
@@ -23,6 +25,7 @@ import com.straccion.appmotos1.presentation.screens.vistabasededatos.ElimRegistr
 import com.straccion.appmotos1.presentation.screens.vistabasededatos.ModRegistro
 import com.straccion.appmotos1.presentation.screens.vistabasededatos.VistaBasedeDatos
 import com.straccion.appmotos1.presentation.screens.vistacompararmotos.CompararMotosMenu
+import com.straccion.appmotos1.presentation.screens.vistadetallesmoto.DetallesMotoScreen
 import com.straccion.appmotos1.presentation.screens.vistaestadistica.VistaEstadistica
 import com.straccion.appmotos1.presentation.screens.vistafavoritos.VistaMotosFavoritos
 import com.straccion.appmotos1.presentation.screens.vistainicio.VistaMotosScreen
@@ -39,7 +42,17 @@ fun NavigationDrawerGraph(navHostController: NavHostController, viewModel: Motos
         startDestination = DrawerScreen.Inicio.route
     ){
         composable(route = DrawerScreen.Inicio.route){
-            VistaMotosScreen()
+            VistaMotosScreen(navHostController)
+        }
+        composable(
+            route = DrawerScreen.Inicio.DetallesMoto.route,
+            arguments = listOf(navArgument("motoId") {
+                type = NavType.StringType
+            })
+        ){
+            it.arguments?.getString("motoId")?.let { motos ->
+                DetallesMotoScreen()
+            }
         }
         composable(route = DrawerScreen.Base_Datos_Vista.route){
             VistaBasedeDatos(navHostController)
@@ -80,6 +93,11 @@ sealed class DrawerScreen (
         title = "Inicio",
         icon = Icons.Default.Home
     )
+    {
+        data object DetallesMoto : DrawerScreen("inicio/detalles/{motoId}", "Detalles Moto"){
+            fun passMotos(motoId: String) = "inicio/detalles/$motoId"
+        }
+    }
     data object Base_Datos_Vista: DrawerScreen(
         route = "base_datos_vista",
         title = "Bases de Datos",

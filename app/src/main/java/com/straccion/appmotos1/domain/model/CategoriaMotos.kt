@@ -1,5 +1,9 @@
 package com.straccion.appmotos1.domain.model
 
+import com.google.gson.Gson
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+
 data class CategoriaMotos(
     var id: String = "",
     var ubicacionImagenes: Map<String, String> = mapOf(),
@@ -28,6 +32,41 @@ data class CategoriaMotos(
     var favoritos: Boolean = false,
     var listaFavoritos: List<String> = listOf(),
     var uidUser: String = ""
+) {
+    fun toJson(): String = Gson().toJson(
+        CategoriaMotos(
+            id,
+            ubicacionImagenes,
+            modelos,
+            fichaTecnica,
+            imagenesPrincipales.map { URLEncoder.encode(it, StandardCharsets.UTF_8.toString()) },
+            imagenesColores1.map { URLEncoder.encode(it, StandardCharsets.UTF_8.toString()) },
+            imagenesColores2.map { URLEncoder.encode(it, StandardCharsets.UTF_8.toString()) },
+            imagenesColores3.map { URLEncoder.encode(it, StandardCharsets.UTF_8.toString()) },
+            imagenesColores4.map { URLEncoder.encode(it, StandardCharsets.UTF_8.toString()) },
+            imagenesColores5.map { URLEncoder.encode(it, StandardCharsets.UTF_8.toString()) },
+            imagenesColores6.map { URLEncoder.encode(it, StandardCharsets.UTF_8.toString()) },
+            caracteristicasImagenes.map { URLEncoder.encode(it, StandardCharsets.UTF_8.toString()) },
+            caracteristicasTexto,
+            colores,
+            marcaMoto,
+            descripcion,
+            consumoPorGalon,
+            prioridad,
+            velocidadMaxima,
+            diferenciaValor,
+            precioActual,
+            precioAnterior,
+            visible,
+            descuento,
+            favoritos,
+            listaFavoritos,
+            uidUser
+        )
+    )
+    companion object{
+        fun fromJson(data: String): CategoriaMotos = Gson().fromJson(data, CategoriaMotos::class.java)
+    }
+}
 
-)
 
