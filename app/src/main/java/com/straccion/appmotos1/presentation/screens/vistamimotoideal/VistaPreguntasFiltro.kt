@@ -30,7 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.straccion.appmotos1.CategoriaMotos
+import com.straccion.appmotos1.domain.model.CategoriaMotos
 import com.straccion.appmotos1.MotosViewModel
 import com.straccion.appmotos1.QuestionnaireState
 
@@ -39,7 +39,7 @@ import com.straccion.appmotos1.QuestionnaireState
 fun VistaPreguntasFiltro(
     viewModel: MotosViewModel,
     questionnaireState: QuestionnaireState,
-    onMotoClick: (CategoriaMotos) -> Unit
+    onMotoClick: (CategoriaMotos) -> Unit = {}
 ) {
     val filteredMotos by viewModel.motosRecomendadas.collectAsState()
 

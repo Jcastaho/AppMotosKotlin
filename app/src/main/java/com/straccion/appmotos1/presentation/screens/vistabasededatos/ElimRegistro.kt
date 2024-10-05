@@ -46,7 +46,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.straccion.appmotos1.presentation.components.AlertDialogExitoso
 import com.straccion.appmotos1.presentation.components.AlertDialogPregunta
-import com.straccion.appmotos1.CategoriaMotos
+import com.straccion.appmotos1.domain.model.CategoriaMotos
 import com.straccion.appmotos1.MotosViewModel
 import com.straccion.appmotos1.MotosState
 import com.straccion.appmotos1.presentation.components.DefaultIconButton
@@ -56,7 +56,7 @@ import com.straccion.appmotos1.presentation.components.DefaultOutlinedTextField
 fun ElimRegistro(
     state: MotosState,
     viewModel: MotosViewModel,
-    onSearch: (String) -> Unit,
+    onSearch: (String) -> Unit = {},
 ) {
     Column(
         modifier = Modifier

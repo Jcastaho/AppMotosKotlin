@@ -47,7 +47,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.straccion.appmotos1.CategoriaMotos
+import com.straccion.appmotos1.domain.model.CategoriaMotos
 import com.straccion.appmotos1.MotosState
 import com.straccion.appmotos1.MotosViewModel
 import com.straccion.appmotos1.presentation.components.DefaultIconButton
@@ -56,8 +56,9 @@ import com.straccion.appmotos1.presentation.components.DefaultIconButton
 @Composable
 fun VistaMotosFavoritos(
     state: MotosState,
-    onMotoClick: (CategoriaMotos) -> Unit,
-    viewModel: MotosViewModel
+    viewModel: MotosViewModel,
+    onMotoClick: (CategoriaMotos) -> Unit = {}
+
 ) {
 
     val configuration = LocalConfiguration.current

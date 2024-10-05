@@ -8,22 +8,29 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.straccion.appmotos1.PantallaInicial
+import com.straccion.appmotos1.presentation.navigation.PantallaInicial
+import com.straccion.appmotos1.presentation.navigation.RootNavGraph
 import com.straccion.appmotos1.presentation.ui.theme.Appmotos1Theme
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private lateinit var navController: NavHostController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val navController = rememberNavController()
+
             Appmotos1Theme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    PantallaInicial(navController)
+                    navController = rememberNavController()
+                    RootNavGraph(navController)
                 }
             }
         }

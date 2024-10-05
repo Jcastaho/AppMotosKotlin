@@ -1,4 +1,4 @@
-package com.straccion.appmotos1
+package com.straccion.appmotos1.presentation.navigation
 
 sealed class Pantallas (val route: String){
     data object PantallaPrincipal : Pantallas("pantalla_principal")

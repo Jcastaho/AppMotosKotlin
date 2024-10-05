@@ -1,4 +1,4 @@
-package com.straccion.appmotos1
+package com.straccion.appmotos1.presentation.navigation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -48,6 +48,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -55,14 +56,19 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
+import com.straccion.appmotos1.MotosViewModel
+import com.straccion.appmotos1.R
 import com.straccion.appmotos1.presentation.screens.vistacompararmotos.CompararMotosMenu
-import com.straccion.appmotos1.estadistica.VistaEstadistica
+import com.straccion.appmotos1.presentation.screens.vistaestadistica.VistaEstadistica
 import com.straccion.appmotos1.presentation.screens.vistafavoritos.VistaMotosFavoritos
 import com.straccion.appmotos1.presentation.screens.vistabasededatos.AggRegistro
 import com.straccion.appmotos1.presentation.screens.vistabasededatos.EditarRegistro
 import com.straccion.appmotos1.presentation.screens.vistabasededatos.ElimRegistro
 import com.straccion.appmotos1.presentation.screens.vistabasededatos.ModRegistro
 import com.straccion.appmotos1.presentation.screens.vistabasededatos.VistaBasedeDatos
+import com.straccion.appmotos1.presentation.screens.vistadetallesmoto.DetallesMotoScreen
+import com.straccion.appmotos1.presentation.screens.vistainicio.VistaInicioViewModel
+import com.straccion.appmotos1.presentation.screens.vistainicio.VistaMotosScreen
 import com.straccion.appmotos1.presentation.screens.vistamimotoideal.VistaPreguntasFiltro
 import kotlinx.coroutines.launch
 
@@ -300,8 +306,7 @@ fun PantallaInicial(navController: NavHostController) {
                 ) {
                     composable(Pantallas.PantallaPrincipal.route) {
                         viewModel.ReiniciarQuestionnaire()
-                        VistaMotos(
-                            state = state,
+                        VistaMotosScreen(
                             onMotoClick = { moto ->
                                 viewModel.selectMoto(moto)
                                 navController.navigate(
@@ -309,8 +314,7 @@ fun PantallaInicial(navController: NavHostController) {
                                         moto.id
                                     )
                                 )
-                            },
-                            onSearch = viewModel::updateSearchQuery
+                            }
                         )
                     }
                     composable(
@@ -325,14 +329,14 @@ fun PantallaInicial(navController: NavHostController) {
                         }
 
                         if (state.selectedMotos != null) {
-                            PantallaDetalles(viewModel = viewModel)
+                            DetallesMotoScreen(viewModel = viewModel)
                         } else {
                             // Manejar el caso en que no se encuentra la moto
                             Text("Moto no encontrada")
                         }
                     }
                     composable(route = Pantallas.BasedeDatos.route) {
-                        VistaBasedeDatos(navController = navController)
+                        VistaBasedeDatos(navController)
                     }
                     composable(route = Pantallas.AggRegistro.route) {
                         AggRegistro(viewModel = viewModel)
@@ -397,27 +401,19 @@ fun PantallaInicial(navController: NavHostController) {
                     composable(route = Pantallas.Favoritas.route) {
                         VistaMotosFavoritos(
                             state = state,
+                            viewModel = viewModel,
                             onMotoClick = { moto ->
                                 viewModel.selectMoto(moto)
                                 navController.navigate(
                                     Pantallas.PantallaDetallesMoto.createRoute(moto.id)
 
                                 )
-                            },
-                            viewModel = viewModel
+                            }
+
                         )
                     }
                     composable(route = Pantallas.Estadisticas.route) {
                         VistaEstadistica(
-                            state = state,
-                            onMotoClick = { moto ->
-                                viewModel.selectMoto(moto)
-                                navController.navigate(
-                                    Pantallas.PantallaDetallesMoto.createRoute(moto.id)
-
-                                )
-                            },
-                            viewModel = viewModel
                         )
                     }
                 }

@@ -1,9 +1,6 @@
-package com.straccion.appmotos1
+package com.straccion.appmotos1.presentation.screens.vistadetallesmoto
 
-import android.content.res.Configuration
-import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -21,24 +18,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,165 +43,27 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.straccion.appmotos1.presentation.components.DefaultOutlinedTextField
+import com.straccion.appmotos1.MotosViewModel
 import kotlinx.coroutines.delay
 import java.text.NumberFormat
 import java.util.Locale
 import kotlin.math.absoluteValue
 
-@Composable
-fun VistaMotos(
-    state: MotosState,
-    onMotoClick: (CategoriaMotos) -> Unit,
-    onSearch: (String) -> Unit
-) {
-    val configuration = LocalConfiguration.current
-    val columns = when (configuration.orientation) {
-        Configuration.ORIENTATION_LANDSCAPE -> 3 // Apaisado
-        else -> 2 // Vertical o por defecto
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        DefaultOutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp),
-            value = state.searchQuery,
-            onValueChange = { query ->
-                onSearch(query)
-            },
-            label = "Buscar motos",
-            singleLine = true,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Search
-            )
-        )
-        when {
-            state.isLoading -> CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 15.dp)
-            )
-
-            state.errorMessage != null -> Text(state.errorMessage, color = Color.Red)
-            state.filteredMotos.isEmpty() -> Text(
-                "No se encontraron motos",
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-
-            else -> {
-                Text(
-                    "Número de motos: ${state.filteredMotos.size}",
-                    modifier = Modifier.padding(6.dp)
-                )
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(columns),
-                    contentPadding = PaddingValues(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    items(
-                        if (state.searchQuery.isEmpty()) {
-                            state.filteredMotos
-                        } else {
-                            state.filteredMotos.sortedBy { it.visible }
-                        }
-                    ) { moto ->
-                        CategoryItem(moto, onClick = { onMotoClick(moto) })
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-@Composable
-fun CategoryItem(motos: CategoriaMotos, onClick: () -> Unit) {
-    Card(
-        modifier = Modifier
-            .padding(4.dp)
-            .fillMaxWidth()
-            .aspectRatio(0.7f)
-            .clickable(onClick = onClick),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            ImagenMoto(
-                url = motos.imagenesPrincipales.get(0)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = motos.id,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(modifier = Modifier.padding(top = 10.dp))
-            Text(
-                text = motos.marcaMoto,
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                fontWeight = FontWeight.Bold
-            )
-        }
-    }
-}
-
-@Composable
-fun ImagenMoto(url: String) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1f) // Esto hará que el contenedor sea cuadrado
-    ) {
-        Image(
-            painter = rememberAsyncImagePainter(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(url)
-                    .crossfade(true)
-                    .build()
-            ),
-            contentDescription = "Moto image",
-            modifier = Modifier
-                .fillMaxSize()
-                .scale(1.07f), // Llena todo el espacio disponible
-            contentScale = ContentScale.Fit // Recorta la imagen para llenar el espacio
-        )
-    }
-}
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PantallaDetalles(viewModel: MotosViewModel) {
+fun DetallesMotoScreen(viewModel: MotosViewModel) {
     val questionnaireState by viewModel.questionnaireState.collectAsState()
     val state by viewModel.state.collectAsState()
     val selectedMoto = state.selectedMotos
@@ -693,4 +546,3 @@ fun MensajeFinal() {
         color = Color.LightGray
     )
 }
-

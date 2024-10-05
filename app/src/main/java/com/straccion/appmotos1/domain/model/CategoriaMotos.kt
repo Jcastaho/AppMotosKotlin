@@ -1,4 +1,4 @@
-package com.straccion.appmotos1
+package com.straccion.appmotos1.domain.model
 
 data class CategoriaMotos(
     var id: String = "",
@@ -23,7 +23,6 @@ data class CategoriaMotos(
     val diferenciaValor: Int = 0,
     val precioActual: Int = 0,
     val precioAnterior: Int = 0,
-
     val visible: Boolean = true,
     var descuento: Boolean = false,
     var favoritos: Boolean = false,

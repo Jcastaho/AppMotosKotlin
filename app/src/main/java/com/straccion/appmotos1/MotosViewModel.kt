@@ -2,14 +2,18 @@ package com.straccion.appmotos1
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.straccion.appmotos1.domain.model.CategoriaMotos
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class MotosViewModel : ViewModel() {
+@HiltViewModel
+class MotosViewModel @Inject constructor() : ViewModel() {
 
     private val _state = MutableStateFlow(MotosState())
     val state: StateFlow<MotosState> = _state.asStateFlow()
@@ -45,7 +49,7 @@ class MotosViewModel : ViewModel() {
     }
 
     init {
-        loadMotos()
+
     }
     private fun addToSelected(moto: CategoriaMotos) {
         if (!_selectedItems.value.contains(moto)) {
@@ -129,35 +133,35 @@ class MotosViewModel : ViewModel() {
         _isFavorite.value = isFavorite
     }
 
-    private fun loadMotos() {
-        viewModelScope.launch {
-            _state.value = _state.value.copy(isLoading = true)
-            try {
-                getMotos() { motos ->
-                    val visibleMotos = motos.filter { it.visible }
-                    _state.value = _state.value.copy(
-                        motos = motos,
-                        filteredMotos = visibleMotos,
-                        isLoading = false,
-                        errorMessage = if (motos.isEmpty()) "No se encontraron motos" else null
-                    )
-                }
-                getMotosFav { motosFav, uidUser ->
-                    _state.value = uidUser?.let {
-                        _state.value?.copy(
-                            uidUser = it,
-                            motosFavoritas = motosFav
-                        )
-                    }!!
-                }
-            } catch (e: Exception) {
-                _state.value = _state.value.copy(
-                    isLoading = false,
-                    errorMessage = "Error: ${e.message}"
-                )
-            }
-        }
-    }
+//    private fun loadMotos() {
+//        viewModelScope.launch {
+//            _state.value = _state.value.copy(isLoading = true)
+//            try {
+//                getMotos() { motos ->
+//                    val visibleMotos = motos.filter { it.visible }
+//                    _state.value = _state.value.copy(
+//                        motos = motos,
+//                        filteredMotos = visibleMotos,
+//                        isLoading = false,
+//                        errorMessage = if (motos.isEmpty()) "No se encontraron motos" else null
+//                    )
+//                }
+//                getMotosFav { motosFav, uidUser ->
+//                    _state.value = uidUser?.let {
+//                        _state.value?.copy(
+//                            uidUser = it,
+//                            motosFavoritas = motosFav
+//                        )
+//                    }!!
+//                }
+//            } catch (e: Exception) {
+//                _state.value = _state.value.copy(
+//                    isLoading = false,
+//                    errorMessage = "Error: ${e.message}"
+//                )
+//            }
+//        }
+//    }
 
     fun updateSearchQuery(query: String) {
         val currentState = _state.value
@@ -664,7 +668,7 @@ data class MotosState(
     val motosFavoritas: List<String> = emptyList(),
     val uidUser: String = "",
 
-)
+    )
 
 data class DialogInfo(
     val title: String,

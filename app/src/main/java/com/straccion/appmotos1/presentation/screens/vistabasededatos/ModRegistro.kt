@@ -39,15 +39,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.straccion.appmotos1.CategoriaMotos
+import com.straccion.appmotos1.domain.model.CategoriaMotos
 import com.straccion.appmotos1.MotosState
 import com.straccion.appmotos1.presentation.components.DefaultOutlinedTextField
 
 @Composable
 fun ModRegistro(
     state: MotosState,
-    onMotoClick: (CategoriaMotos) -> Unit,
-    onSearch: (String) -> Unit
+    onMotoClick: (CategoriaMotos) -> Unit = {},
+    onSearch: (String) -> Unit = {}
 ) {
     Column(
         modifier = Modifier

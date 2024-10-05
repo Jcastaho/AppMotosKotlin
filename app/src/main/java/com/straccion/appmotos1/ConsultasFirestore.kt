@@ -7,82 +7,64 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.SetOptions
 
 
-fun authenticateUser(onSuccess: () -> Unit) {
-    val auth = FirebaseAuth.getInstance()
-    if (auth.currentUser == null) {
-        // Si no hay usuario autenticado, autenticarse anónimamente
-        auth.signInAnonymously().addOnCompleteListener {
-            if (it.isSuccessful) {
-                onSuccess() // Ejecutar la lógica que sigue solo después de la autenticación exitosa
-            } else {
-                Log.e("AuthError", "Error en la autenticación anónima", it.exception)
-            }
-        }
-    } else {
-        // Si ya hay un usuario autenticado, ejecutar la lógica de éxito de inmediato
-        onSuccess()
-    }
-}
 
-fun getMotos(onMotosCambiadas: (List<CategoriaMotos>) -> Unit) {
-    authenticateUser {
-        attachSnapshotListener(onMotosCambiadas)
-    }
-}
+//fun getMotos(onMotosCambiadas: (List<CategoriaMotos>) -> Unit) {
+//    attachSnapshotListener(onMotosCambiadas)
+//}
 
 
-fun getMotosFav(onMotosCambiadas: (List<String>, String?) -> Unit) {
-    val auth = FirebaseAuth.getInstance()
-    val db = FirebaseFirestore.getInstance()
-    val currentUser = auth.currentUser
+//fun getMotosFav(onMotosCambiadas: (List<String>, String?) -> Unit) {
+//    val auth = FirebaseAuth.getInstance()
+//    val db = FirebaseFirestore.getInstance()
+//    val currentUser = auth.currentUser
+//
+//    if (currentUser != null) {
+//        val userUid = currentUser.uid
+//        db.collection("FavoritasUsuarios")
+//            .whereEqualTo("uid", userUid)
+//            .addSnapshotListener { snapshot, e ->
+//                if (e != null) {
+//                    Log.w("getMotosFavoritasUsuariosEnTiempoReal", "Listen failed.", e)
+//                    onMotosCambiadas(emptyList(), userUid)
+//                    return@addSnapshotListener
+//                }
+//
+//                if (snapshot != null && !snapshot.isEmpty) {
+//                    val motoIds = snapshot.documents.flatMap { doc ->
+//                        (doc.get("motoId") as? List<*>)?.filterIsInstance<String>() ?: emptyList()
+//                    }.distinct()
+//                    onMotosCambiadas(motoIds, userUid)
+//                } else {
+//                    Log.d("getMotosEnTiempoReal", "No data found for user: $userUid")
+//                    onMotosCambiadas(emptyList(), userUid)
+//                }
+//            }
+//    } else {
+//        Log.d("getMotosEnTiempoReal", "No user is authenticated")
+//        onMotosCambiadas(emptyList(), null)
+//    }
+//}
 
-    if (currentUser != null) {
-        val userUid = currentUser.uid
-        db.collection("FavoritasUsuarios")
-            .whereEqualTo("uid", userUid)
-            .addSnapshotListener { snapshot, e ->
-                if (e != null) {
-                    Log.w("getMotosFavoritasUsuariosEnTiempoReal", "Listen failed.", e)
-                    onMotosCambiadas(emptyList(), userUid)
-                    return@addSnapshotListener
-                }
-
-                if (snapshot != null && !snapshot.isEmpty) {
-                    val motoIds = snapshot.documents.flatMap { doc ->
-                        (doc.get("motoId") as? List<*>)?.filterIsInstance<String>() ?: emptyList()
-                    }.distinct()
-                    onMotosCambiadas(motoIds, userUid)
-                } else {
-                    Log.d("getMotosEnTiempoReal", "No data found for user: $userUid")
-                    onMotosCambiadas(emptyList(), userUid)
-                }
-            }
-    } else {
-        Log.d("getMotosEnTiempoReal", "No user is authenticated")
-        onMotosCambiadas(emptyList(), null)
-    }
-}
-
-private fun attachSnapshotListener(onMotosCambiadas: (List<CategoriaMotos>) -> Unit) {
-    val db = FirebaseFirestore.getInstance()
-    db.collection("NuevaMotos").addSnapshotListener { snapshot, e ->
-        if (e != null) {
-            Log.w("getMotosEnTiempoReal", "Listen failed.", e)
-            return@addSnapshotListener
-        }
-        if (snapshot != null && !snapshot.isEmpty) {
-            val motos = snapshot.documents.mapNotNull { doc ->
-                doc.toObject(CategoriaMotos::class.java)?.apply {
-                    id = doc.getString("id") ?: doc.id
-                    marcaMoto = ubicacionImagenes["carpeta1"] ?: ""
-                }
-            }
-            onMotosCambiadas(motos)
-        } else {
-            Log.d("getMotosEnTiempoReal", "No data found")
-        }
-    }
-}
+//private fun attachSnapshotListener(onMotosCambiadas: (List<CategoriaMotos>) -> Unit) {
+//    val db = FirebaseFirestore.getInstance()
+//    db.collection("NuevaMotos").addSnapshotListener { snapshot, e ->
+//        if (e != null) {
+//            Log.w("getMotosEnTiempoReal", "Listen failed.", e)
+//            return@addSnapshotListener
+//        }
+//        if (snapshot != null && !snapshot.isEmpty) {
+//            val motos = snapshot.documents.mapNotNull { doc ->
+//                doc.toObject(CategoriaMotos::class.java)?.apply {
+//                    id = doc.getString("id") ?: doc.id
+//                    marcaMoto = ubicacionImagenes["carpeta1"] ?: ""
+//                }
+//            }
+//            onMotosCambiadas(motos)
+//        } else {
+//            Log.d("getMotosEnTiempoReal", "No data found")
+//        }
+//    }
+//}
 
 
 suspend fun actualizarFichaTecnicayOtrosDatosEnFirebase(
@@ -204,10 +186,12 @@ suspend fun actualizarFavoritos(motoId: String, nuevoEstado: Boolean): Boolean {
             }
 
             // Actualizar el documento con la nueva lista de motoIds
-            transaction.set(userFavRef, mapOf(
-                "uid" to uid,
-                "motoId" to updatedMotoIds
-            ), SetOptions.merge())
+            transaction.set(
+                userFavRef, mapOf(
+                    "uid" to uid,
+                    "motoId" to updatedMotoIds
+                ), SetOptions.merge()
+            )
         }.await()
 
         Log.d("Firestore", "Lista de motoIds actualizada exitosamente para el usuario: $uid")
