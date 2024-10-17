@@ -4,7 +4,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.InsertChart
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Motorcycle
 import androidx.compose.material.icons.filled.QuestionAnswer
 import androidx.compose.material.icons.filled.Star
@@ -24,7 +23,7 @@ import com.straccion.appmotos1.presentation.screens.vistabasededatos.EditarRegis
 import com.straccion.appmotos1.presentation.screens.vistabasededatos.ElimRegistro
 import com.straccion.appmotos1.presentation.screens.vistabasededatos.ModRegistro
 import com.straccion.appmotos1.presentation.screens.vistabasededatos.VistaBasedeDatos
-import com.straccion.appmotos1.presentation.screens.vistacompararmotos.CompararMotosMenu
+import com.straccion.appmotos1.presentation.screens.vistacompararmotos.CompararMotosScreen
 import com.straccion.appmotos1.presentation.screens.vistadetallesmoto.DetallesMotoScreen
 import com.straccion.appmotos1.presentation.screens.vistaestadistica.VistaEstadistica
 import com.straccion.appmotos1.presentation.screens.vistafavoritos.VistaMotosFavoritos
@@ -46,11 +45,15 @@ fun NavigationDrawerGraph(navHostController: NavHostController, viewModel: Motos
         }
         composable(
             route = DrawerScreen.Inicio.DetallesMoto.route,
-            arguments = listOf(navArgument("motoId") {
-                type = NavType.StringType
-            })
+            arguments = listOf(
+                navArgument("moto") { type = NavType.StringType },
+                navArgument("motoId") { type = NavType.StringType }
+            )
         ){
-            it.arguments?.getString("motoId")?.let { motos ->
+            val moto = it.arguments?.getString("moto")
+            val motoId = it.arguments?.getString("motoId")
+
+            if (motoId != null && moto != null) {
                 DetallesMotoScreen()
             }
         }
@@ -70,7 +73,7 @@ fun NavigationDrawerGraph(navHostController: NavHostController, viewModel: Motos
             ElimRegistro(state, viewModel)
         }
         composable(route = DrawerScreen.Comparar_Motos.route){
-            CompararMotosMenu(state, viewModel)
+            CompararMotosScreen()
         }
         composable(route = DrawerScreen.MiMotoIdeal.route){
             VistaPreguntasFiltro(viewModel, questionnaireState)
@@ -94,8 +97,8 @@ sealed class DrawerScreen (
         icon = Icons.Default.Home
     )
     {
-        data object DetallesMoto : DrawerScreen("inicio/detalles/{motoId}", "Detalles Moto"){
-            fun passMotos(motoId: String) = "inicio/detalles/$motoId"
+        data object DetallesMoto : DrawerScreen("inicio/detalles/{moto}/{motoId}", "Detalles Moto"){
+            fun passMotos(moto: String, motoId: String ) = "inicio/detalles/$moto/$motoId"
         }
     }
     data object Base_Datos_Vista: DrawerScreen(

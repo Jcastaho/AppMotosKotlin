@@ -48,7 +48,7 @@ fun CompararMotosMenu(
     state: MotosState,
     viewModel: MotosViewModel
 ) {
-    var seleccionados by remember { mutableStateOf(List(3) { MotoSeleccionada() }) }
+  //  var seleccionados by remember { mutableStateOf(List(3) { MotoSeleccionada() }) }
 
     LazyColumn {
         item {
@@ -57,148 +57,148 @@ fun CompararMotosMenu(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 repeat(3) { index ->
-                    ObjetoComparacion(
-                        state = state,
-                        modifier = Modifier.weight(1f),
-                        viewModel = viewModel,
-                        motoSeleccionada = seleccionados[index],
-                        onMotoSeleccionada = { moto, ficha ->
-                            seleccionados = seleccionados.toMutableList().also {
-                                it[index] = MotoSeleccionada(moto, ficha)
-                            }
-                        }
-                    )
+//                    ObjetoComparacion(
+//                        state = state,
+//                        modifier = Modifier.weight(1f),
+//                        viewModel = viewModel,
+//                        motoSeleccionada = seleccionados[index],
+//                        onMotoSeleccionada = { moto, ficha ->
+//                            seleccionados = seleccionados.toMutableList().also {
+//                                it[index] = MotoSeleccionada(moto, ficha)
+//                            }
+//                        }
+//                    )
                 }
             }
         }
     }
 }
 
-data class MotoSeleccionada(
-    val moto: String? = null,
-    val fichaItems: List<Pair<String, Any>> = emptyList()
-)
+//data class MotoSeleccionada(
+//    val moto: String? = null,
+//    val fichaItems: List<Pair<String, Any>> = emptyList()
+//)
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ObjetoComparacion(
-    state: MotosState,
-    modifier: Modifier = Modifier,
-    viewModel: MotosViewModel,
-    motoSeleccionada: MotoSeleccionada,
-    onMotoSeleccionada: (String, List<Pair<String, Any>>) -> Unit
-) {
-    var showBottomSheet by remember { mutableStateOf(false) }
-    var imagenMoto by remember { mutableStateOf<String>("") }
-
-    Card(
-        modifier = modifier
-            .padding(4.dp)
-            .clickable { showBottomSheet = true }
-            .fillMaxHeight(),
-        shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(
-            width = 2.dp,
-            color = if (motoSeleccionada.moto != null) MaterialTheme.colorScheme.primary else Color.Transparent
-        )
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(90.dp)
-                    .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
-            ) {
-                if (motoSeleccionada.moto != null) {
-                    ImagenMotos(
-                        url = imagenMoto
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Seleccionar objeto",
-                        modifier = Modifier
-                            .size(40.dp)
-                            .align(Alignment.Center),
-                        tint = Color.DarkGray
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = motoSeleccionada.moto ?: "Seleccionar",
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-            motoSeleccionada.fichaItems.forEachIndexed { index, entry ->
-                val (clave, valor) = entry
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(if (index % 2 == 0) Color.LightGray else Color.White),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = clave.replaceFirstChar { it.uppercase() },
-                        modifier = Modifier.weight(1f),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Text(
-                        text = valor.toString(),
-                        modifier = Modifier.weight(1f),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            }
-            if (showBottomSheet) {
-                ModalBottomSheet(
-                    onDismissRequest = { showBottomSheet = false }
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    ) {
-                        Text(
-                            text = "Selecciona una moto",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                        LazyColumn {
-                            item {
-                                state.filteredMotos.forEach { moto ->
-                                    Text(
-                                        text = moto.id,
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .clickable {
-                                                viewModel.selectMotoById(moto.id)
-                                                imagenMoto = moto.imagenesPrincipales.firstOrNull() ?: ""
-                                                viewModel.fichaItemsMostrar.value.let { fichaItems ->
-                                                    onMotoSeleccionada(moto.id, fichaItems)
-                                                }
-                                                showBottomSheet = false
-                                            }
-                                            .padding(vertical = 8.dp)
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun ObjetoComparacion(
+//    state: MotosState,
+//    modifier: Modifier = Modifier,
+//    viewModel: MotosViewModel,
+//   // motoSeleccionada: MotoSeleccionada,
+//    onMotoSeleccionada: (String, List<Pair<String, Any>>) -> Unit
+//) {
+//    var showBottomSheet by remember { mutableStateOf(false) }
+//    var imagenMoto by remember { mutableStateOf<String>("") }
+//
+//    Card(
+//        modifier = modifier
+//            .padding(4.dp)
+//            .clickable { showBottomSheet = true }
+//            .fillMaxHeight(),
+//        shape = RoundedCornerShape(12.dp),
+//        border = BorderStroke(
+//            width = 2.dp,
+//            color = if (motoSeleccionada.moto != null) MaterialTheme.colorScheme.primary else Color.Transparent
+//        )
+//    ) {
+//        Column(
+//            modifier = Modifier
+//                .padding(8.dp)
+//                .fillMaxSize(),
+//            horizontalAlignment = Alignment.CenterHorizontally,
+//            verticalArrangement = Arrangement.SpaceBetween
+//        ) {
+//            Box(
+//                modifier = Modifier
+//                    .size(90.dp)
+//                    .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
+//            ) {
+//                if (motoSeleccionada.moto != null) {
+//                    ImagenMotos(
+//                        url = imagenMoto
+//                    )
+//                } else {
+//                    Icon(
+//                        imageVector = Icons.Default.Add,
+//                        contentDescription = "Seleccionar objeto",
+//                        modifier = Modifier
+//                            .size(40.dp)
+//                            .align(Alignment.Center),
+//                        tint = Color.DarkGray
+//                    )
+//                }
+//            }
+//            Spacer(modifier = Modifier.height(8.dp))
+//
+//            Text(
+//                text = motoSeleccionada.moto ?: "Seleccionar",
+//                style = MaterialTheme.typography.titleSmall,
+//                fontWeight = FontWeight.Bold,
+//                textAlign = TextAlign.Center
+//            )
+//            motoSeleccionada.fichaItems.forEachIndexed { index, entry ->
+//                val (clave, valor) = entry
+//                Row(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .background(if (index % 2 == 0) Color.LightGray else Color.White),
+//                    horizontalArrangement = Arrangement.SpaceBetween
+//                ) {
+//                    Text(
+//                        text = clave.replaceFirstChar { it.uppercase() },
+//                        modifier = Modifier.weight(1f),
+//                        style = MaterialTheme.typography.bodyMedium
+//                    )
+//                    Text(
+//                        text = valor.toString(),
+//                        modifier = Modifier.weight(1f),
+//                        style = MaterialTheme.typography.bodyMedium
+//                    )
+//                }
+//            }
+//            if (showBottomSheet) {
+//                ModalBottomSheet(
+//                    onDismissRequest = { showBottomSheet = false }
+//                ) {
+//                    Column(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .padding(16.dp)
+//                    ) {
+//                        Text(
+//                            text = "Selecciona una moto",
+//                            style = MaterialTheme.typography.titleMedium,
+//                            fontWeight = FontWeight.Bold,
+//                            modifier = Modifier.padding(bottom = 8.dp)
+//                        )
+//                        LazyColumn {
+//                            item {
+//                                state.filteredMotos.forEach { moto ->
+//                                    Text(
+//                                        text = moto.id,
+//                                        style = MaterialTheme.typography.bodyLarge,
+//                                        modifier = Modifier
+//                                            .fillMaxWidth()
+//                                            .clickable {
+//                                                viewModel.selectMotoById(moto.id)
+//                                                imagenMoto = moto.imagenesPrincipales.firstOrNull() ?: ""
+//                                                viewModel.fichaItemsMostrar.value.let { fichaItems ->
+//                                                    onMotoSeleccionada(moto.id, fichaItems)
+//                                                }
+//                                                showBottomSheet = false
+//                                            }
+//                                            .padding(vertical = 8.dp)
+//                                    )
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun ImagenMotos(url: String) {

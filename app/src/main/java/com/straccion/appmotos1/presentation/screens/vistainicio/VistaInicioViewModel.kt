@@ -78,11 +78,11 @@ class VistaInicioViewModel @Inject constructor(
         }
         _motosResponse.value = Response.Success(filteredList)
     }
-
-    //esto es para mostrar los detalles de las motos
-    private val _motos = mutableStateOf<List<CategoriaMotos>>(emptyList())
-    val motos: State<List<CategoriaMotos>> = _motos
-    fun getMotoById(id: String): CategoriaMotos? {
-        return _motos.value.find { it.id == id }
-    }
+//
+//    //esto es para mostrar los detalles de las motos
+//    private val _motos = mutableStateOf<List<CategoriaMotos>>(emptyList())
+//    val motos: State<List<CategoriaMotos>> = _motos
+//    fun getMotoById(id: String): CategoriaMotos? {
+//        return _motos.value.find { it.id == id }
+//    }
 }

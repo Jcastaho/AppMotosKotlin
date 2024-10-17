@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface MotosRepository {
     suspend fun getMotos(): Flow<Response<List<CategoriaMotos>>>
+    suspend fun getMotosById(idMoto: String): Flow<Response<List<CategoriaMotos>>>
 }

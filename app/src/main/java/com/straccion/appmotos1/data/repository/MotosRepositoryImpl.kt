@@ -40,4 +40,30 @@ class MotosRepositoryImpl @Inject constructor(
             snapshotListener.remove()
         }
     }
+
+    override suspend fun getMotosById(idMoto: String): Flow<Response<List<CategoriaMotos>>> = callbackFlow {
+        val snapshotListener = motosRef
+            .whereEqualTo("visible", true)
+            .whereEqualTo("id", idMoto)
+            .addSnapshotListener { snapshot, e ->
+                val motosResponse = if (snapshot != null) {
+                    try {
+                        val motos = snapshot.documents.mapNotNull { doc ->
+                            doc.toObject(CategoriaMotos::class.java)?.apply {
+                                id = doc.getString("id") ?: doc.id
+                            }
+                        }
+                        Response.Success(motos)
+                    } catch (e: Exception) {
+                        Response.Failure(e)
+                    }
+                } else {
+                    Response.Failure(e ?: Exception("Unknown error occurred"))
+                }
+                trySend(motosResponse)
+            }
+        awaitClose {
+            snapshotListener.remove()
+        }
+    }
 }

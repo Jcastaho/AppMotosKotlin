@@ -1,27 +1,46 @@
 package com.straccion.appmotos1.presentation.screens.vistadetallesmoto
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.straccion.appmotos1.domain.model.CategoriaMotos
+import com.straccion.appmotos1.domain.model.Response
+import com.straccion.appmotos1.domain.use_cases.obtener_motos.ObtenerMotosUsesCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
 @HiltViewModel
 class DetallesMotoViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle
-): ViewModel(){
-    private val encodedData = savedStateHandle.get<String>("motoId")
-    val moto = encodedData?.let { CategoriaMotos.fromJson(URLDecoder.decode(it, StandardCharsets.UTF_8.toString())) } ?: CategoriaMotos()
+    private val savedStateHandle: SavedStateHandle,
+    private val obtenerMotosUsesCase: ObtenerMotosUsesCase
+) : ViewModel() {
+    private val encodedData = savedStateHandle.get<String>("moto")
+    private val encodeIdMoto = savedStateHandle.get<String>("motoId")
 
+    private val _motoById = MutableStateFlow<Response<List<CategoriaMotos>>>(Response.Loading)
+    val motoById: StateFlow<Response<List<CategoriaMotos>>> = _motoById.asStateFlow()
 
-    var selectedColor: String? by mutableStateOf(moto.colores.firstOrNull())
-    val displayedImages: List<String>
-        get() = when (selectedColor) {
+    private val _moto = MutableStateFlow<CategoriaMotos>(CategoriaMotos())
+    val moto: StateFlow<CategoriaMotos> = _moto.asStateFlow()
+
+    private val _selectedColor = MutableStateFlow<String?>(null)
+    val selectedColor: StateFlow<String?> = _selectedColor.asStateFlow()
+
+    val displayedImages: StateFlow<List<String>> = moto.combine(selectedColor) { moto, color ->
+        when (color) {
             moto.colores.getOrNull(0) -> moto.imagenesPrincipales
             moto.colores.getOrNull(1) -> moto.imagenesColores1
             moto.colores.getOrNull(2) -> moto.imagenesColores2
@@ -31,18 +50,77 @@ class DetallesMotoViewModel @Inject constructor(
             moto.colores.getOrNull(6) -> moto.imagenesColores6
             else -> moto.imagenesPrincipales
         }
+    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-    fun imagenesMostradas(color: String){
-        val imagenesMostradas = when (color) {
-            moto.colores.getOrNull(0) -> moto.imagenesPrincipales
-            moto.colores.getOrNull(1) -> moto.imagenesColores1
-            moto.colores.getOrNull(2) -> moto.imagenesColores2
-            moto.colores.getOrNull(3) -> moto.imagenesColores3
-            moto.colores.getOrNull(4) -> moto.imagenesColores4
-            moto.colores.getOrNull(5) -> moto.imagenesColores5
-            moto.colores.getOrNull(6) -> moto.imagenesColores6
-            else -> moto.imagenesPrincipales
+    fun selectColor(color: String) {
+        _selectedColor.value = color
+    }
+
+
+    // region infiniteImageCarousel
+    private val _selectedImage = MutableStateFlow<Pair<String, Int>?>(null)
+    val selectedImage: StateFlow<Pair<String, Int>?> = _selectedImage
+
+    fun selectedImage(image: Pair<String, Int>) {
+        _selectedImage.value = image
+    }
+
+    fun clearSelectedImage() {
+        _selectedImage.value = null
+    }
+    // endregion
+
+    init {
+        loadMotoDetails()
+    }
+
+    private fun loadMotoDetails() {
+        viewModelScope.launch {
+            val decodedMoto = decodeMotoData(encodedData)
+            if (decodedMoto.colores.isEmpty() || decodedMoto.imagenesPrincipales.isEmpty()) {
+                loadMotoById()
+            } else {
+                _moto.value = decodedMoto
+                _selectedColor.value = decodedMoto.colores.firstOrNull()
+                _motoById.value = Response.Success(listOf(decodedMoto))
+            }
         }
+    }
+    private fun loadMotoById() {
+        viewModelScope.launch {
+            val idMoto = decodeId(encodeIdMoto)
+            try {
+                obtenerMotosUsesCase.obtenerMotosById(idMoto).collect { response ->
+                    _motoById.value = response
+                    if (response is Response.Success && response.data.isNotEmpty()) {
+                        _moto.value = response.data[0]
+                        _selectedColor.value = response.data[0].colores.firstOrNull()
+                    }
+                }
+            } catch (e: Exception) {
+                _motoById.value = Response.Failure(e)
+            }
+        }
+    }
+
+    private fun decodeMotoData(encodedData: String?): CategoriaMotos {
+        return encodedData?.let {
+            try {
+                CategoriaMotos.fromJson(URLDecoder.decode(it, StandardCharsets.UTF_8.toString()))
+            } catch (e: IllegalArgumentException) {
+                CategoriaMotos()
+            }
+        } ?: CategoriaMotos()
+    }
+
+    private fun decodeId(encodedId: String?): String {
+        return encodedId?.let {
+            try {
+                URLDecoder.decode(it, StandardCharsets.UTF_8.toString())
+            } catch (e: IllegalArgumentException) {
+                ""
+            }
+        } ?: ""
     }
 
 

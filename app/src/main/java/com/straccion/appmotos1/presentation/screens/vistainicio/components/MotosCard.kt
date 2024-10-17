@@ -37,8 +37,11 @@ fun MotosCard(
             .fillMaxWidth()
             .aspectRatio(0.7f)
             .clickable{
+                val encodedMoto = URLEncoder.encode(motos.toJson(), StandardCharsets.UTF_8.toString())
+                val id = motos.id
+                val idEnconde = URLEncoder.encode(id, StandardCharsets.UTF_8.toString())
                 navHostController.navigate(
-                    route = DrawerScreen.Inicio.DetallesMoto.passMotos(URLEncoder.encode(motos.toJson(), StandardCharsets.UTF_8.toString()))
+                    route = DrawerScreen.Inicio.DetallesMoto.passMotos(encodedMoto, idEnconde)
                 )
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)

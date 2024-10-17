@@ -14,6 +14,7 @@ import com.straccion.appmotos1.domain.use_cases.auth.AuthUsesCases
 import com.straccion.appmotos1.domain.use_cases.auth.GetCurrentUser
 import com.straccion.appmotos1.domain.use_cases.auth.Login
 import com.straccion.appmotos1.domain.use_cases.obtener_motos.ObtenerMotos
+import com.straccion.appmotos1.domain.use_cases.obtener_motos.ObtenerMotosById
 import com.straccion.appmotos1.domain.use_cases.obtener_motos.ObtenerMotosUsesCase
 import dagger.Module
 import dagger.Provides
@@ -46,7 +47,8 @@ object AppModule {
 
     @Provides
     fun providesObtenerMotossesCases(repository: MotosRepository) = ObtenerMotosUsesCase(
-        obtenerMotos = ObtenerMotos(repository)
+        obtenerMotos = ObtenerMotos(repository),
+        obtenerMotosById = ObtenerMotosById(repository)
     )
     @Provides
     fun providerMotosRepository(impl: MotosRepositoryImpl): MotosRepository = impl
