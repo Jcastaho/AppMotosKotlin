@@ -32,7 +32,7 @@ class CompararMotosViewModel @Inject constructor(
     fun getMotos() = viewModelScope.launch {
         _motosResponse.value = Response.Loading
         try {
-            obtenerMotosUsesCase.obtenerMotos().collect { response ->
+            obtenerMotosUsesCase.obtenerMotosVisibles().collect { response ->
                 _motosResponse.value = response
                 if (response is Response.Success) {
                     _motosDisponibles.value = response.data.sortedBy { it.id }

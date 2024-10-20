@@ -1,6 +1,5 @@
 package com.straccion.appmotos1.presentation.screens.vistainicio
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -23,7 +22,7 @@ class VistaInicioViewModel @Inject constructor(
     private val authUsesCases: AuthUsesCases,
     private val obtenerMotosUsesCase: ObtenerMotosUsesCase
 ): ViewModel() {
-    val currentUser = authUsesCases.getCurrentUser()
+
     //valida el ingreso a sesion
     var loginResponse by mutableStateOf<Response<FirebaseUser>?>(null)
         private set
@@ -41,16 +40,16 @@ class VistaInicioViewModel @Inject constructor(
     init {
         login()
     }
-    fun login() = viewModelScope.launch {
+    private fun login() = viewModelScope.launch {
         loginResponse = Response.Loading
         val result = authUsesCases.login()
         loginResponse = result
         getMotos()
     }
-    fun getMotos() = viewModelScope.launch {
+    private fun getMotos() = viewModelScope.launch {
         _motosResponse.value = Response.Loading
         try {
-            obtenerMotosUsesCase.obtenerMotos().collect { response ->
+            obtenerMotosUsesCase.obtenerMotosVisibles().collect { response ->
                 when (response) {
                     is Response.Success -> {
                         _allMotos.value = response.data
@@ -78,11 +77,4 @@ class VistaInicioViewModel @Inject constructor(
         }
         _motosResponse.value = Response.Success(filteredList)
     }
-//
-//    //esto es para mostrar los detalles de las motos
-//    private val _motos = mutableStateOf<List<CategoriaMotos>>(emptyList())
-//    val motos: State<List<CategoriaMotos>> = _motos
-//    fun getMotoById(id: String): CategoriaMotos? {
-//        return _motos.value.find { it.id == id }
-//    }
 }

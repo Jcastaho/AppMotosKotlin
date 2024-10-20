@@ -386,18 +386,17 @@ fun PantallaInicial(navController: NavHostController) {
 //                        )
 //                    }
                     composable(route = Pantallas.Favoritas.route) {
-                        VistaMotosFavoritos(
-                            state = state,
-                            viewModel = viewModel,
-                            onMotoClick = { moto ->
-                                viewModel.selectMoto(moto)
-                                navController.navigate(
-                                    Pantallas.PantallaDetallesMoto.createRoute(moto.id)
-
-                                )
-                            }
-
-                        )
+//                        VistaMotosFavoritos(
+//                            state = state,
+//                            viewModel = viewModel,
+//                            onMotoClick = { moto ->
+//                                viewModel.selectMoto(moto)
+//                                navController.navigate(
+//                                    Pantallas.PantallaDetallesMoto.createRoute(moto.id)
+//
+//                                )
+//                            }//
+//                        )
                     }
                     composable(route = Pantallas.Estadisticas.route) {
                         VistaEstadistica(

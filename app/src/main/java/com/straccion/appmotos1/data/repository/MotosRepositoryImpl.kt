@@ -15,7 +15,7 @@ class MotosRepositoryImpl @Inject constructor(
     @Named(MOTOS) private val motosRef: CollectionReference
 ): MotosRepository {
 
-    override suspend fun getMotos(): Flow<Response<List<CategoriaMotos>>> = callbackFlow {
+    override suspend fun getMotosVisibles(): Flow<Response<List<CategoriaMotos>>> = callbackFlow {
         val snapshotListener = motosRef
             .whereEqualTo("visible", true)
             .addSnapshotListener { snapshot, e ->

@@ -26,13 +26,17 @@ import com.straccion.appmotos1.presentation.screens.vistabasededatos.VistaBasede
 import com.straccion.appmotos1.presentation.screens.vistacompararmotos.CompararMotosScreen
 import com.straccion.appmotos1.presentation.screens.vistadetallesmoto.DetallesMotoScreen
 import com.straccion.appmotos1.presentation.screens.vistaestadistica.VistaEstadistica
+import com.straccion.appmotos1.presentation.screens.vistafavoritos.FavoritosScreen
 import com.straccion.appmotos1.presentation.screens.vistafavoritos.VistaMotosFavoritos
 import com.straccion.appmotos1.presentation.screens.vistainicio.VistaMotosScreen
 import com.straccion.appmotos1.presentation.screens.vistamimotoideal.VistaPreguntasFiltro
 
 
 @Composable
-fun NavigationDrawerGraph(navHostController: NavHostController, viewModel: MotosViewModel = hiltViewModel()) {
+fun NavigationDrawerGraph(
+    navHostController: NavHostController,
+    viewModel: MotosViewModel = hiltViewModel()
+) {
     val state by viewModel.state.collectAsState() // quitar con el viewmodel
     val questionnaireState by viewModel.questionnaireState.collectAsState() // quitar con el viewmodel
     NavHost(
@@ -79,7 +83,7 @@ fun NavigationDrawerGraph(navHostController: NavHostController, viewModel: Motos
             VistaPreguntasFiltro(viewModel, questionnaireState)
         }
         composable(route = DrawerScreen.Favoritas.route){
-            VistaMotosFavoritos(state, viewModel)
+            FavoritosScreen(navHostController)
         }
         composable(route = DrawerScreen.Estadistica.route){
             VistaEstadistica()

@@ -6,6 +6,6 @@ import com.straccion.appmotos1.domain.repository.MotosRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class ObtenerMotos @Inject constructor(private val repository: MotosRepository) {
-    suspend operator fun invoke(): Flow<Response<List<CategoriaMotos>>> = repository.getMotos()
+class ObtenerMotosVisibles @Inject constructor(private val repository: MotosRepository) {
+    suspend operator fun invoke(): Flow<Response<List<CategoriaMotos>>> = repository.getMotosVisibles()
 }

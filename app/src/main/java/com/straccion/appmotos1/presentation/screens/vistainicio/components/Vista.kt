@@ -33,7 +33,7 @@ fun Vista(
     ) {
         Text(
             text = "Número de motos: ${motos.size}",
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(10.dp)
         )
         LazyVerticalGrid(
             columns = GridCells.Fixed(columns),
