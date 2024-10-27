@@ -74,56 +74,56 @@ class MotosViewModel @Inject constructor() : ViewModel() {
         _selectedItems.value = motos
     }
 
-    fun toggleFavorite(motoId: String) {
-        viewModelScope.launch {
-            val currentFavoriteState = _isFavorite.value
-            val newFavoriteState = !currentFavoriteState
-
-            // Actualizar el estado local
-            _isFavorite.value = newFavoriteState
-
-            // Actualizar en Firebase
-            try {
-                val result = actualizarFavoritos(motoId, newFavoriteState)
-                if (result) {
-                    // Actualizar el estado de la moto seleccionada
-                    _state.update { currentState ->
-                        val updatedMoto =
-                            currentState.selectedMotos?.copy(favoritos = newFavoriteState)
-                        currentState.copy(selectedMotos = updatedMoto)
-                    }
-                } else {
-                    // Si la actualización en Firebase falla, revertir el estado local
-                    _isFavorite.value = currentFavoriteState
-                    _state.update {
-                        it.copy(
-                            showDialog = true,
-                            dialogInfo = DialogInfo(
-                                title = "Error",
-                                message = "No se pudo actualizar el estado de favorito. Por favor, intente nuevamente.",
-                                isSuccess = false,
-                                gifResourceId = R.drawable.gif_confirmar
-                            )
-                        )
-                    }
-                }
-            } catch (e: Exception) {
-                // Manejar la excepción
-                _isFavorite.value = currentFavoriteState
-                _state.update {
-                    it.copy(
-                        showDialog = true,
-                        dialogInfo = DialogInfo(
-                            title = "Error",
-                            message = "Ocurrió un error: ${e.message}",
-                            isSuccess = false,
-                            gifResourceId = R.drawable.gif_confirmar
-                        )
-                    )
-                }
-            }
-        }
-    }
+//    fun toggleFavorite(motoId: String) {
+//        viewModelScope.launch {
+//            val currentFavoriteState = _isFavorite.value
+//            val newFavoriteState = !currentFavoriteState
+//
+//            // Actualizar el estado local
+//            _isFavorite.value = newFavoriteState
+//
+//            // Actualizar en Firebase
+//            try {
+//                val result = actualizarFavoritos(motoId, newFavoriteState)
+//                if (result) {
+//                    // Actualizar el estado de la moto seleccionada
+//                    _state.update { currentState ->
+//                        val updatedMoto =
+//                            currentState.selectedMotos?.copy(favoritos = newFavoriteState)
+//                        currentState.copy(selectedMotos = updatedMoto)
+//                    }
+//                } else {
+//                    // Si la actualización en Firebase falla, revertir el estado local
+//                    _isFavorite.value = currentFavoriteState
+//                    _state.update {
+//                        it.copy(
+//                            showDialog = true,
+//                            dialogInfo = DialogInfo(
+//                                title = "Error",
+//                                message = "No se pudo actualizar el estado de favorito. Por favor, intente nuevamente.",
+//                                isSuccess = false,
+//                                gifResourceId = R.drawable.gif_confirmar
+//                            )
+//                        )
+//                    }
+//                }
+//            } catch (e: Exception) {
+//                // Manejar la excepción
+//                _isFavorite.value = currentFavoriteState
+//                _state.update {
+//                    it.copy(
+//                        showDialog = true,
+//                        dialogInfo = DialogInfo(
+//                            title = "Error",
+//                            message = "Ocurrió un error: ${e.message}",
+//                            isSuccess = false,
+//                            gifResourceId = R.drawable.gif_confirmar
+//                        )
+//                    )
+//                }
+//            }
+//        }
+//    }
 
     // Función para actualizar el estado de favorito cuando se selecciona una moto
     fun updateFavoriteState(isFavorite: Boolean) {
@@ -196,90 +196,90 @@ class MotosViewModel @Inject constructor() : ViewModel() {
         ELIMINAR
     }
 
-    fun actualizarOEliminarMoto(motoId: String, accion: AccionMoto, nuevoEstado: Boolean? = null) {
-        viewModelScope.launch {
-            try {
-                val resultado = when (accion) {
-                    AccionMoto.ACTUALIZAR_VISIBILIDAD -> actualizarVisibilidadEnFirebase(
-                        motoId,
-                        nuevoEstado ?: return@launch
-                    )
-
-                    AccionMoto.ELIMINAR -> eliminarDocumentoEnFirebase(motoId)
-                }
-                if (resultado) {
-                    _state.update { currentState ->
-                        val motosActualizadas = when (accion) {
-                            AccionMoto.ACTUALIZAR_VISIBILIDAD -> currentState.motos.map { moto ->
-                                if (moto.id == motoId) moto.copy(visible = nuevoEstado!!) else moto
-                            }
-
-                            AccionMoto.ELIMINAR -> currentState.motos.filter { it.id != motoId }
-                        }
-
-                        currentState.copy(
-                            motos = motosActualizadas,
-                            filteredMotos = motosActualizadas.filter { moto ->
-                                moto.visible && (
-                                        moto.id.contains(
-                                            currentState.searchQuery,
-                                            ignoreCase = true
-                                        ) ||
-                                                moto.marcaMoto.contains(
-                                                    currentState.searchQuery,
-                                                    ignoreCase = true
-                                                )
-                                        )
-                            },
-                            showDialog = true,
-                            dialogInfo = DialogInfo(
-                                title = when (accion) {
-                                    AccionMoto.ACTUALIZAR_VISIBILIDAD -> "Actualización Exitosa"
-                                    AccionMoto.ELIMINAR -> "Eliminación Exitosa"
-                                },
-                                message = when (accion) {
-                                    AccionMoto.ACTUALIZAR_VISIBILIDAD -> "La visibilidad se ha actualizado correctamente."
-                                    AccionMoto.ELIMINAR -> "El documento ha sido eliminado correctamente."
-                                },
-                                isSuccess = true,
-                                gifResourceId = R.drawable.gif_confirmar
-                            )
-                        )
-                    }
-                } else {
-                    _state.update {
-                        it.copy(
-                            showDialog = true,
-                            dialogInfo = DialogInfo(
-                                title = when (accion) {
-                                    AccionMoto.ACTUALIZAR_VISIBILIDAD -> "Error en la Actualización"
-                                    AccionMoto.ELIMINAR -> "Error en la Eliminación"
-                                },
-                                message = when (accion) {
-                                    AccionMoto.ACTUALIZAR_VISIBILIDAD -> "No se pudo actualizar la visibilidad. Por favor, intente nuevamente."
-                                    AccionMoto.ELIMINAR -> "No se pudo eliminar el documento. Por favor, intente nuevamente."
-                                },
-                                isSuccess = false,
-                                gifResourceId = R.drawable.gif_confirmar
-                            )
-                        )
-                    }
-                }
-            } catch (e: Exception) {
-                _state.update {
-                    it.copy(
-                        showDialog = true,
-                        dialogInfo = DialogInfo(
-                            title = "Error",
-                            message = "Ocurrió un error: ${e.message}",
-                            isSuccess = false,
-                            gifResourceId = R.drawable.gif_confirmar
-                        )
-                    )
-                }
-            }
-        }
-    }
+//    fun actualizarOEliminarMoto(motoId: String, accion: AccionMoto, nuevoEstado: Boolean? = null) {
+//        viewModelScope.launch {
+//            try {
+//                val resultado = when (accion) {
+//                    AccionMoto.ACTUALIZAR_VISIBILIDAD -> actualizarVisibilidadEnFirebase(
+//                        motoId,
+//                        nuevoEstado ?: return@launch
+//                    )
+//
+//                    AccionMoto.ELIMINAR -> eliminarDocumentoEnFirebase(motoId)
+//                }
+//                if (resultado) {
+//                    _state.update { currentState ->
+//                        val motosActualizadas = when (accion) {
+//                            AccionMoto.ACTUALIZAR_VISIBILIDAD -> currentState.motos.map { moto ->
+//                                if (moto.id == motoId) moto.copy(visible = nuevoEstado!!) else moto
+//                            }
+//
+//                            AccionMoto.ELIMINAR -> currentState.motos.filter { it.id != motoId }
+//                        }
+//
+//                        currentState.copy(
+//                            motos = motosActualizadas,
+//                            filteredMotos = motosActualizadas.filter { moto ->
+//                                moto.visible && (
+//                                        moto.id.contains(
+//                                            currentState.searchQuery,
+//                                            ignoreCase = true
+//                                        ) ||
+//                                                moto.marcaMoto.contains(
+//                                                    currentState.searchQuery,
+//                                                    ignoreCase = true
+//                                                )
+//                                        )
+//                            },
+//                            showDialog = true,
+//                            dialogInfo = DialogInfo(
+//                                title = when (accion) {
+//                                    AccionMoto.ACTUALIZAR_VISIBILIDAD -> "Actualización Exitosa"
+//                                    AccionMoto.ELIMINAR -> "Eliminación Exitosa"
+//                                },
+//                                message = when (accion) {
+//                                    AccionMoto.ACTUALIZAR_VISIBILIDAD -> "La visibilidad se ha actualizado correctamente."
+//                                    AccionMoto.ELIMINAR -> "El documento ha sido eliminado correctamente."
+//                                },
+//                                isSuccess = true,
+//                                gifResourceId = R.drawable.gif_confirmar
+//                            )
+//                        )
+//                    }
+//                } else {
+//                    _state.update {
+//                        it.copy(
+//                            showDialog = true,
+//                            dialogInfo = DialogInfo(
+//                                title = when (accion) {
+//                                    AccionMoto.ACTUALIZAR_VISIBILIDAD -> "Error en la Actualización"
+//                                    AccionMoto.ELIMINAR -> "Error en la Eliminación"
+//                                },
+//                                message = when (accion) {
+//                                    AccionMoto.ACTUALIZAR_VISIBILIDAD -> "No se pudo actualizar la visibilidad. Por favor, intente nuevamente."
+//                                    AccionMoto.ELIMINAR -> "No se pudo eliminar el documento. Por favor, intente nuevamente."
+//                                },
+//                                isSuccess = false,
+//                                gifResourceId = R.drawable.gif_confirmar
+//                            )
+//                        )
+//                    }
+//                }
+//            } catch (e: Exception) {
+//                _state.update {
+//                    it.copy(
+//                        showDialog = true,
+//                        dialogInfo = DialogInfo(
+//                            title = "Error",
+//                            message = "Ocurrió un error: ${e.message}",
+//                            isSuccess = false,
+//                            gifResourceId = R.drawable.gif_confirmar
+//                        )
+//                    )
+//                }
+//            }
+//        }
+//    }
 
     fun actualizarItem(index: Int, clave: String, valor: Any) {
         _fichaItems.update { currentList ->
@@ -304,50 +304,50 @@ class MotosViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun actualizarFichaTecnica() {
-        viewModelScope.launch {
-            val nuevoMapa = _fichaItems.value.toMap()
-            val motoId = _state.value.selectedMotos?.id
-            if (motoId != null) {
-                val resultado = actualizarFichaTecnicayOtrosDatosEnFirebase(motoId, nuevoMapa)
-                if (resultado) {
-                    _state.value = _state.value.copy(
-                        showDialog = true,
-                        dialogInfo = DialogInfo(
-                            title = "Actualización Exitosa",
-                            message = "La ficha técnica se ha actualizado correctamente.",
-                            isSuccess = true,
-                            gifResourceId = R.drawable.gif_confirmar
-                        )
-                    )
-                } else {
-                    _state.value = _state.value.copy(
-                        showDialog = true,
-                        dialogInfo = DialogInfo(
-                            title = "Error en la Actualización",
-                            message = "No se pudo actualizar la ficha técnica. Por favor, intente nuevamente.",
-                            isSuccess = false,
-                            gifResourceId = R.drawable.gif_confirmar
-                        )
-                    )
-                }
-            } else {
-                _state.value = _state.value.copy(
-                    showDialog = true,
-                    dialogInfo = DialogInfo(
-                        title = "Error",
-                        message = "No se ha seleccionado ninguna moto.",
-                        isSuccess = false,
-                        gifResourceId = R.drawable.gif_confirmar // Reemplaza con el nombre de tu GIF
-                    )
-                )
-            }
-        }
-    }
+//    fun actualizarFichaTecnica() {
+//        viewModelScope.launch {
+//            val nuevoMapa = _fichaItems.value.toMap()
+//            val motoId = _state.value.selectedMotos?.id
+//            if (motoId != null) {
+//                val resultado = actualizarFichaTecnicayOtrosDatosEnFirebase(motoId, nuevoMapa)
+//                if (resultado) {
+//                    _state.value = _state.value.copy(
+//                        showDialog = true,
+//                        dialogInfo = DialogInfo(
+//                            title = "Actualización Exitosa",
+//                            message = "La ficha técnica se ha actualizado correctamente.",
+//                            isSuccess = true,
+//                            gifResourceId = R.drawable.gif_confirmar
+//                        )
+//                    )
+//                } else {
+//                    _state.value = _state.value.copy(
+//                        showDialog = true,
+//                        dialogInfo = DialogInfo(
+//                            title = "Error en la Actualización",
+//                            message = "No se pudo actualizar la ficha técnica. Por favor, intente nuevamente.",
+//                            isSuccess = false,
+//                            gifResourceId = R.drawable.gif_confirmar
+//                        )
+//                    )
+//                }
+//            } else {
+//                _state.value = _state.value.copy(
+//                    showDialog = true,
+//                    dialogInfo = DialogInfo(
+//                        title = "Error",
+//                        message = "No se ha seleccionado ninguna moto.",
+//                        isSuccess = false,
+//                        gifResourceId = R.drawable.gif_confirmar // Reemplaza con el nombre de tu GIF
+//                    )
+//                )
+//            }
+//        }
+//    }
 
-    fun dismissDialog() {
-        _state.value = _state.value.copy(showDialog = false, dialogInfo = null)
-    }
+//    fun dismissDialog() {
+//        _state.value = _state.value.copy(showDialog = false, dialogInfo = null)
+//    }
 
     fun selectMotoById(id: String) {
         viewModelScope.launch {
@@ -371,7 +371,7 @@ class MotosViewModel @Inject constructor() : ViewModel() {
             )
             _fichaItems.value = moto.fichaTecnica.toList()
             _fichaItemsMostrar.value = moto.fichaTecnica.toList()
-            if (_motosRecomendadas.value.isNotEmpty()){
+            if (_motosRecomendadas.value.isNotEmpty()) {
                 TextoRecomendacion(moto)
             }
 
@@ -468,7 +468,7 @@ class MotosViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun TextoRecomendacion(motosFiltradas: CategoriaMotos?){
+    fun TextoRecomendacion(motosFiltradas: CategoriaMotos?) {
         // Generar una recomendación personalizada basada en las motos filtradas
         val answers = _questionnaireState.value.answers
         val motoRecomendacion = generatePersonalizedRecommendation(motosFiltradas, answers)
@@ -492,7 +492,7 @@ class MotosViewModel @Inject constructor() : ViewModel() {
             _motosRecomendadas.value = filteredMotos
 
             // Actualizar el estado con los resultados
-            _questionnaireState.update{ currentState ->
+            _questionnaireState.update { currentState ->
                 currentState.copy(
                     isCompleted = true
                 )
@@ -500,8 +500,9 @@ class MotosViewModel @Inject constructor() : ViewModel() {
 
         }
     }
-    fun ReiniciarQuestionnaire(){
-        _questionnaireState.update{ currentState ->
+
+    fun ReiniciarQuestionnaire() {
+        _questionnaireState.update { currentState ->
             currentState.copy(
                 personalizedRecommendation = null,
                 isCompleted = false
@@ -523,17 +524,18 @@ class MotosViewModel @Inject constructor() : ViewModel() {
             }
             // Filtrado por uso principal de la moto
             val filtroUsoMoto = when (answers[1]) {
-                "Uso cotidiano en ciudad" -> moto.ubicacionImagenes["carpeta3"].equals( "SEMIAUTOMATICAS") ||
-                        moto.ubicacionImagenes["carpeta3"].equals( "DEPORTIVA") ||
-                        moto.ubicacionImagenes["carpeta3"].equals( "URBANAS") ||
-                        moto.ubicacionImagenes["carpeta3"].equals( "AUTOMATICAS") ||
-                        moto.ubicacionImagenes["carpeta3"].equals( "TRABAJO") ||
-                        moto.ubicacionImagenes["carpeta3"].equals( "TODOTERRENO")
+                "Uso cotidiano en ciudad" -> moto.ubicacionImagenes["carpeta3"].equals("SEMIAUTOMATICAS") ||
+                        moto.ubicacionImagenes["carpeta3"].equals("DEPORTIVA") ||
+                        moto.ubicacionImagenes["carpeta3"].equals("URBANAS") ||
+                        moto.ubicacionImagenes["carpeta3"].equals("AUTOMATICAS") ||
+                        moto.ubicacionImagenes["carpeta3"].equals("TRABAJO") ||
+                        moto.ubicacionImagenes["carpeta3"].equals("TODOTERRENO")
 
-                "Viajes" -> moto.ubicacionImagenes["carpeta3"].equals( "ADVENTURE")
+                "Viajes" -> moto.ubicacionImagenes["carpeta3"].equals("ADVENTURE")
 
-                "Trabajo" -> moto.ubicacionImagenes["carpeta3"].equals( "TRABAJO") ||
-                        moto.ubicacionImagenes["carpeta3"].equals( "URBANAS")
+                "Trabajo" -> moto.ubicacionImagenes["carpeta3"].equals("TRABAJO") ||
+                        moto.ubicacionImagenes["carpeta3"].equals("URBANAS")
+
                 "Uso mixto" -> true // Permitir todas
                 else -> true
             }
@@ -548,7 +550,7 @@ class MotosViewModel @Inject constructor() : ViewModel() {
 
             // Filtrado por tipo de transmisión
             val filtroTransmision = when (answers[3]) {
-                "Semiautomática" -> moto.ubicacionImagenes["carpeta3"].equals( "SEMIAUTOMATICAS")
+                "Semiautomática" -> moto.ubicacionImagenes["carpeta3"].equals("SEMIAUTOMATICAS")
                 "Automática" -> moto.ubicacionImagenes["carpeta3"].equals("AUTOMATICAS")
                 "No es relevante" -> true
                 else -> true
@@ -659,17 +661,10 @@ data class MotosState(
     val selectedCategoriasMotos: String? = null,
     val nombreMotoaRegistrar: String? = null,
     val showDialog: Boolean = false,
-    val dialogInfo: DialogInfo? = null,
     val isQuestionnaireCompleted: Boolean = false,
     val recommendedCategory: String? = null,
     val motosFavoritas: List<String> = emptyList(),
-    val uidUser: String = "",
-
+    val uidUser: String = ""
     )
 
-data class DialogInfo(
-    val title: String,
-    val message: String,
-    val isSuccess: Boolean,
-    val gifResourceId: Int
-)
+

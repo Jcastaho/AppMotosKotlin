@@ -1,5 +1,4 @@
-package com.straccion.appmotos1.presentation.screens.vistainicio
-
+package com.straccion.appmotos1.presentation.screens.vistabasededatos.vistas_database.database_modificar
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
@@ -14,16 +13,16 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.straccion.appmotos1.domain.model.CategoriaMotos
 import com.straccion.appmotos1.presentation.components.DefaultOutlinedTextField
-import com.straccion.appmotos1.presentation.screens.vistainicio.components.GetMotosInicio
+import com.straccion.appmotos1.presentation.screens.vistabasededatos.vistas_database.database_modificar.components.GetMotosModificar
+
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun VistaMotosScreen(
+fun ModRegistroScreen(
     navHostController: NavHostController,
-    viewModel: VistaInicioViewModel = hiltViewModel(),
-) {
+    viewModel: ModRegistrosViewModel = hiltViewModel(),
+    ) {
     val busqueda = viewModel.busqueda
     Scaffold(
         topBar = {
@@ -51,7 +50,7 @@ fun VistaMotosScreen(
         content = { paddingValues ->
             // Pasar el paddingValues para evitar que el contenido se superponga con el topBar
             Box(modifier = Modifier.padding(top = paddingValues.calculateTopPadding())) {
-                GetMotosInicio(navHostController)
+                GetMotosModificar(navHostController)
             }
         }
     )

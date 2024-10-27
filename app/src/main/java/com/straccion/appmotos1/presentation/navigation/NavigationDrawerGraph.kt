@@ -18,19 +18,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.straccion.appmotos1.MotosViewModel
-import com.straccion.appmotos1.presentation.screens.vistabasededatos.AggRegistro
-import com.straccion.appmotos1.presentation.screens.vistabasededatos.EditarRegistro
-import com.straccion.appmotos1.presentation.screens.vistabasededatos.ElimRegistro
-import com.straccion.appmotos1.presentation.screens.vistabasededatos.ModRegistro
-import com.straccion.appmotos1.presentation.screens.vistabasededatos.VistaBasedeDatos
+import com.straccion.appmotos1.presentation.screens.vistabasededatos.DataBaseVista
+import com.straccion.appmotos1.presentation.screens.vistabasededatos.vistas_database.database_agregar.AggRegistro
+import com.straccion.appmotos1.presentation.screens.vistabasededatos.vistas_database.database_eliminar_ocultar.ElimRegistroScreen
+import com.straccion.appmotos1.presentation.screens.vistabasededatos.vistas_database.database_modificar.ModRegistroScreen
+import com.straccion.appmotos1.presentation.screens.vistabasededatos.vistas_database.editar_registros.EditarRegistroScreen
 import com.straccion.appmotos1.presentation.screens.vistacompararmotos.CompararMotosScreen
 import com.straccion.appmotos1.presentation.screens.vistadetallesmoto.DetallesMotoScreen
 import com.straccion.appmotos1.presentation.screens.vistaestadistica.VistaEstadistica
 import com.straccion.appmotos1.presentation.screens.vistafavoritos.FavoritosScreen
-import com.straccion.appmotos1.presentation.screens.vistafavoritos.VistaMotosFavoritos
 import com.straccion.appmotos1.presentation.screens.vistainicio.VistaMotosScreen
 import com.straccion.appmotos1.presentation.screens.vistamimotoideal.VistaPreguntasFiltro
-
 
 @Composable
 fun NavigationDrawerGraph(
@@ -62,19 +60,30 @@ fun NavigationDrawerGraph(
             }
         }
         composable(route = DrawerScreen.Base_Datos_Vista.route){
-            VistaBasedeDatos(navHostController)
+            DataBaseVista(navHostController)
         }
         composable(route = DrawerScreen.Base_Datos_Vista.AgregarRegistro.route){
             AggRegistro(viewModel)
         }
         composable(route = DrawerScreen.Base_Datos_Vista.ModificarRegistro.route){
-            ModRegistro(state)
+            ModRegistroScreen(navHostController)
         }
-        composable(route = DrawerScreen.Base_Datos_Vista.ModificarRegistro.EditarRegistro.route){
-            EditarRegistro(viewModel, state)
+        composable(
+            route =  DrawerScreen.Base_Datos_Vista.ModificarRegistro.EditarRegistro.route,
+            arguments = listOf(
+                navArgument("moto") { type = NavType.StringType },
+                navArgument("motoId") { type = NavType.StringType }
+            )
+        ){
+            val moto = it.arguments?.getString("moto")
+            val motoId = it.arguments?.getString("motoId")
+
+            if (motoId != null && moto != null) {
+                EditarRegistroScreen()
+            }
         }
         composable(route = DrawerScreen.Base_Datos_Vista.EliminarRegistro.route){
-            ElimRegistro(state, viewModel)
+            ElimRegistroScreen(navHostController)
         }
         composable(route = DrawerScreen.Comparar_Motos.route){
             CompararMotosScreen()
@@ -113,7 +122,10 @@ sealed class DrawerScreen (
     {
         data object AgregarRegistro : DrawerScreen("base_datos_vista/AgregarRegistro", "Agregar Nuevo Registro")
         data object ModificarRegistro : DrawerScreen("base_datos_vista/ModificarRegistro", "Modificar Registro"){
-            data object EditarRegistro : DrawerScreen("base_datos_vista/EditarRegistro", "Editar Registro")
+            data object EditarRegistro : DrawerScreen("base_datos_vista/editar/{moto}/{motoId}", "Editar Registro"){
+                fun passMoto(moto: String, motoId: String ) = "base_datos_vista/editar/$moto/$motoId"
+            }
+
         }
         data object EliminarRegistro : DrawerScreen("base_datos_vista/EliminarRegistro", "Eliminar Registro")
     }

@@ -50,20 +50,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.navArgument
 import com.straccion.appmotos1.MotosViewModel
 import com.straccion.appmotos1.R
 import com.straccion.appmotos1.presentation.screens.vistaestadistica.VistaEstadistica
-import com.straccion.appmotos1.presentation.screens.vistafavoritos.VistaMotosFavoritos
-import com.straccion.appmotos1.presentation.screens.vistabasededatos.AggRegistro
-import com.straccion.appmotos1.presentation.screens.vistabasededatos.EditarRegistro
-import com.straccion.appmotos1.presentation.screens.vistabasededatos.ElimRegistro
-import com.straccion.appmotos1.presentation.screens.vistabasededatos.ModRegistro
-import com.straccion.appmotos1.presentation.screens.vistabasededatos.VistaBasedeDatos
+import com.straccion.appmotos1.presentation.screens.vistabasededatos.vistas_database.database_agregar.AggRegistro
 import com.straccion.appmotos1.presentation.screens.vistamimotoideal.VistaPreguntasFiltro
 import kotlinx.coroutines.launch
 
@@ -279,7 +272,7 @@ fun PantallaInicial(navController: NavHostController) {
                                     val isFavorite by viewModel.isFavorite.collectAsState()
                                     IconButton(
                                         onClick = {
-                                            viewModel.toggleFavorite(moto.id)
+                                            //viewModel.toggleFavorite(moto.id)
                                         }
                                     ) {
                                         Icon(
@@ -322,51 +315,51 @@ fun PantallaInicial(navController: NavHostController) {
                             Text("Moto no encontrada")
                         }
                     }
-                    composable(route = Pantallas.BasedeDatos.route) {
-                        VistaBasedeDatos(navController)
-                    }
+//                    composable(route = Pantallas.BasedeDatos.route) {
+//                        VistaBasedeDatos(navController)
+//                    }
                     composable(route = Pantallas.AggRegistro.route) {
                         AggRegistro(viewModel = viewModel)
                     }
-                    composable(route = Pantallas.ModRegistro.route) {
-                        ModRegistro(
-                            state = state,
-                            onMotoClick = { moto ->
-                                viewModel.selectMoto(moto)
-                                navController.navigate(
-                                    Pantallas.EditarRegistro.Route(
-                                        moto.id
-                                    )
-                                )
-                            },
-                            onSearch = viewModel::updateSearchQuery
-                        )
-                    }
-                    composable(route = Pantallas.ElimRegistro.route) {
-                        ElimRegistro(
-                            state = state,
-                            viewModel = viewModel,
-                            onSearch = viewModel::busquedaBarraEliminarBaseDatos,
-                        )
-                    }
-                    composable(
-                        route = Pantallas.EditarRegistro.route,
-                        arguments = listOf(navArgument("motoId") { type = NavType.StringType })
-                    ) { backStackEntry ->
-                        val motoId = backStackEntry.arguments?.getString("motoId")
-
-                        LaunchedEffect(motoId) {
-                            motoId?.let { id ->
-                                viewModel.selectMotoById(id)
-                            }
-                        }
-                        if (state.selectedMotos != null) {
-                            EditarRegistro(viewModel = viewModel, state = state)
-                        } else {
-                            // Manejar el caso en que no se encuentra la moto
-                            Text("Moto no encontrada")
-                        }
-                    }
+//                    composable(route = Pantallas.ModRegistro.route) {
+//                        ModRegistro(
+//                            state = state,
+//                            onMotoClick = { moto ->
+//                                viewModel.selectMoto(moto)
+//                                navController.navigate(
+//                                    Pantallas.EditarRegistro.Route(
+//                                        moto.id
+//                                    )
+//                                )
+//                            },
+//                            onSearch = viewModel::updateSearchQuery
+//                        )
+//                    }
+//                    composable(route = Pantallas.ElimRegistro.route) {
+//                        ElimRegistro(
+//                            state = state,
+//                            viewModel = viewModel,
+//                            onSearch = viewModel::busquedaBarraEliminarBaseDatos,
+//                        )
+//                    }
+//                    composable(
+//                        route = Pantallas.EditarRegistro.route,
+//                        arguments = listOf(navArgument("motoId") { type = NavType.StringType })
+//                    ) { backStackEntry ->
+//                        val motoId = backStackEntry.arguments?.getString("motoId")
+//
+//                        LaunchedEffect(motoId) {
+//                            motoId?.let { id ->
+//                                viewModel.selectMotoById(id)
+//                            }
+//                        }
+//                        if (state.selectedMotos != null) {
+//                            EditarRegistro(viewModel = viewModel, state = state)
+//                        } else {
+//                            // Manejar el caso en que no se encuentra la moto
+//                            Text("Moto no encontrada")
+//                        }
+//                    }
                     composable(route = Pantallas.VistaPreguntas.route) {
                         VistaPreguntasFiltro(
                             viewModel = viewModel,

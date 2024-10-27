@@ -1,4 +1,4 @@
-package com.straccion.appmotos1.presentation.screens.vistabasededatos
+package com.straccion.appmotos1.presentation.screens.vistabasededatos.vistas_database.database_agregar
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
