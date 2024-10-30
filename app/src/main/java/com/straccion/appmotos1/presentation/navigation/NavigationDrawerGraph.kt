@@ -35,7 +35,6 @@ fun NavigationDrawerGraph(
     navHostController: NavHostController,
     viewModel: MotosViewModel = hiltViewModel()
 ) {
-    val state by viewModel.state.collectAsState() // quitar con el viewmodel
     val questionnaireState by viewModel.questionnaireState.collectAsState() // quitar con el viewmodel
     NavHost(
         navController = navHostController,
@@ -56,7 +55,7 @@ fun NavigationDrawerGraph(
             val motoId = it.arguments?.getString("motoId")
 
             if (motoId != null && moto != null) {
-                DetallesMotoScreen()
+                DetallesMotoScreen(navHostController)
             }
         }
         composable(route = DrawerScreen.Base_Datos_Vista.route){
@@ -125,7 +124,6 @@ sealed class DrawerScreen (
             data object EditarRegistro : DrawerScreen("base_datos_vista/editar/{moto}/{motoId}", "Editar Registro"){
                 fun passMoto(moto: String, motoId: String ) = "base_datos_vista/editar/$moto/$motoId"
             }
-
         }
         data object EliminarRegistro : DrawerScreen("base_datos_vista/EliminarRegistro", "Eliminar Registro")
     }

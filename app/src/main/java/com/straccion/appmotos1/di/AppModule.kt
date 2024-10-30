@@ -23,6 +23,7 @@ import com.straccion.appmotos1.domain.use_cases.databases.EliminarMoto
 import com.straccion.appmotos1.domain.use_cases.databases.ObtenerAllMotos
 import com.straccion.appmotos1.domain.use_cases.databases.OcultarMotocicleta
 import com.straccion.appmotos1.domain.use_cases.databases.UpdateFichaTec
+import com.straccion.appmotos1.domain.use_cases.favoritos.AgregarMotoFav
 import com.straccion.appmotos1.domain.use_cases.favoritos.FavoritasUsesCase
 import com.straccion.appmotos1.domain.use_cases.obtener_motos.ObtenerMotosById
 import com.straccion.appmotos1.domain.use_cases.favoritos.ObtenerMotosFavoritas
@@ -75,7 +76,8 @@ object AppModule {
     @Provides
     fun providesFavoritasUsesCases(repository: FavoritasRepository) = FavoritasUsesCase(
         obtenerMotosFavoritas = ObtenerMotosFavoritas(repository),
-        quitarMotosFav = QuitarMotosFav(repository)
+        quitarMotosFav = QuitarMotosFav(repository),
+        agregarMotoFav = AgregarMotoFav(repository)
     )
     @Provides
     fun providerFavoritasRepository(impl: FavoritasRepositoryImpl): FavoritasRepository = impl

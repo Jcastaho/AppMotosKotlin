@@ -1,6 +1,7 @@
 package com.straccion.appmotos1.data.repository
 
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FieldValue
 import com.straccion.appmotos1.core.Constants.MOTOSFAV
 import com.straccion.appmotos1.domain.model.FavoritasUsuarios
 import com.straccion.appmotos1.domain.model.Response
@@ -58,6 +59,31 @@ class FavoritasRepositoryImpl @Inject constructor(
                 Response.Success(true)
             } else {
                 Response.Failure(Exception("Documento no encontrado"))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Response.Failure(e)
+        }
+    }
+
+    override suspend fun agregarMotosFav(id: String, userId: String): Response<Boolean> {
+        //aun no esta lista
+        return try {
+            val map: MutableMap<String, Any> = HashMap()
+            map["motoId"] = id
+
+            // Busca el documento donde el campo "uid" es igual al userId
+            val document = motosFav.whereEqualTo("uid", userId).get().await()
+
+            if (!document.isEmpty) {
+                val docRef = motosFav.document(document.documents.first().id)
+                docRef.update("motoId", FieldValue.arrayUnion(id)).await()
+                Response.Success(true)
+            } else {
+                // Si no existe el documento, crea uno nuevo
+                val newDoc = FavoritasUsuarios(motoId = listOf(id), uid = userId)
+                motosFav.document(userId).set(newDoc).await()
+                Response.Success(true)
             }
         } catch (e: Exception) {
             e.printStackTrace()

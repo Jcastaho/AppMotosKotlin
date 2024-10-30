@@ -3,7 +3,9 @@ package com.straccion.appmotos1.presentation.screens.home
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -13,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,7 +39,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.straccion.appmotos1.R
 import com.straccion.appmotos1.presentation.navigation.DrawerScreen
@@ -46,10 +51,15 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(navHostController: NavHostController = rememberNavController()) {
+fun HomeScreen(
+    navHostController: NavHostController = rememberNavController()
+) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    var currentScreen by remember { mutableStateOf<DrawerScreen>(DrawerScreen.Inicio) }
+
+    val navBackStackEntry by navHostController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    val currentScreenTitle = getTitleForRoute(currentRoute)
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -69,7 +79,6 @@ fun HomeScreen(navHostController: NavHostController = rememberNavController()) {
                     ),
                     onItemClick = { screen ->
                         scope.launch { drawerState.close() }
-                        currentScreen = screen
                         navHostController.navigate(screen.route) {
                             popUpTo(navHostController.graph.startDestinationId)
                             launchSingleTop = true
@@ -78,21 +87,28 @@ fun HomeScreen(navHostController: NavHostController = rememberNavController()) {
                 )
             }
         }
-    ){
+    ) {
         Scaffold(
             topBar = {
-                TopAppBar(
-                    title = { Text(currentScreen.title) },
-                    navigationIcon = {
-                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                            Icon(Icons.Default.Menu, contentDescription = "Menu")
-                        }
-                    }
-                )
+                if (currentRoute?.startsWith(DrawerScreen.Inicio.DetallesMoto.route) == true) {
+                } else {
+                    TopAppBar(
+                        title = { Text(currentScreenTitle) },
+                        navigationIcon = {
+                            IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                                Icon(Icons.Default.Menu, contentDescription = "Menu")
+                            }
+                        },
+                    )
+                }
             }
         ) { innerPadding ->
-            Box(modifier = Modifier.padding(innerPadding)) {
+            if (currentRoute?.startsWith(DrawerScreen.Inicio.DetallesMoto.route) == true) {
                 NavigationDrawerGraph(navHostController)
+            }else{
+                Box(modifier = Modifier.padding(innerPadding)) {
+                    NavigationDrawerGraph(navHostController)
+                }
             }
         }
     }
@@ -134,6 +150,24 @@ fun DrawerBody(
                 modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
             )
         }
+    }
+}
+
+@Composable
+fun getTitleForRoute(route: String?): String {
+    return when (route) {
+        DrawerScreen.Inicio.route -> DrawerScreen.Inicio.title
+        DrawerScreen.Inicio.DetallesMoto.route -> DrawerScreen.Inicio.DetallesMoto.title
+        DrawerScreen.Base_Datos_Vista.route -> DrawerScreen.Base_Datos_Vista.title
+        DrawerScreen.Base_Datos_Vista.AgregarRegistro.route -> DrawerScreen.Base_Datos_Vista.AgregarRegistro.title
+        DrawerScreen.Base_Datos_Vista.ModificarRegistro.route -> DrawerScreen.Base_Datos_Vista.ModificarRegistro.title
+        DrawerScreen.Base_Datos_Vista.ModificarRegistro.EditarRegistro.route -> DrawerScreen.Base_Datos_Vista.ModificarRegistro.EditarRegistro.title
+        DrawerScreen.Base_Datos_Vista.EliminarRegistro.route -> DrawerScreen.Base_Datos_Vista.EliminarRegistro.title
+        DrawerScreen.Comparar_Motos.route -> DrawerScreen.Comparar_Motos.title
+        DrawerScreen.MiMotoIdeal.route -> DrawerScreen.MiMotoIdeal.title
+        DrawerScreen.Favoritas.route -> DrawerScreen.Favoritas.title
+        DrawerScreen.Estadistica.route -> DrawerScreen.Estadistica.title
+        else -> "Default Title"
     }
 }
 
