@@ -45,7 +45,8 @@ class DetallesMotoViewModel @Inject constructor(
     val moto: StateFlow<CategoriaMotos> = _moto.asStateFlow()
 
     //obtener las motos favoritas
-    private val _motosFavoritas = MutableStateFlow<Response<List<FavoritasUsuarios>>>(Response.Loading)
+    private val _motosFavoritas =
+        MutableStateFlow<Response<List<FavoritasUsuarios>>>(Response.Loading)
     val motosFavoritas: StateFlow<Response<List<FavoritasUsuarios>>> = _motosFavoritas.asStateFlow()
     val currentUser = authUsesCases.getCurrentUser()?.uid
 
@@ -151,7 +152,7 @@ class DetallesMotoViewModel @Inject constructor(
     }
 
     //Funciones para controlar las favoritas
-    fun agregarMotoFav(motoId: String){
+    fun agregarMotoFav(motoId: String) {
         viewModelScope.launch {
             currentUser?.let { uid ->
                 val result = favoritasUsesCase.agregarMotoFav(motoId, uid)
@@ -159,7 +160,19 @@ class DetallesMotoViewModel @Inject constructor(
         }
     }
 
+    fun quitarMotoFav(motoId: String, motosFav: List<FavoritasUsuarios>) = viewModelScope.launch {
+        currentUser?.let { uid ->
+            // Asumiendo que solo necesitas la lista de IDs de motos
+            val resultado = motosFav
+                .firstOrNull()?.motoId  // Obtiene la lista de motoId del primer elemento
+                ?.filter { it != motoId }  // Filtra excluyendo el motoId que queremos quitar
+                ?: emptyList()  // Si es null, retorna lista vacía
 
-
+            val result = favoritasUsesCase.quitarMotosFav(resultado, uid)
+        }
+    }
 
 }
+
+
+

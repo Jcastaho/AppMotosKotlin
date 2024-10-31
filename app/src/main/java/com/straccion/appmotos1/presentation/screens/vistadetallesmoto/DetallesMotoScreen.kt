@@ -72,7 +72,7 @@ fun DetallesMotoScreen(
                                 val resultado = prueba.filter { it.motoId.contains(motos.id) }
                                 IconButton(onClick = {
                                     if (resultado.isNotEmpty()) {
-
+                                        viewModel.quitarMotoFav(motos.id, prueba)
                                     }else{
                                         viewModel.agregarMotoFav(motos.id)
                                     }

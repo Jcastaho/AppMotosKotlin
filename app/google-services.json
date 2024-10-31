@@ -7,25 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:225103779367:android:44ce7bcd98ede27e562002",
-        "android_client_info": {
-          "package_name": "com.eje.as"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAm6C6y1CSAq0V_cfKh5VVSl6se93CBIkI"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:225103779367:android:ee851ecdc10714ef562002",
         "android_client_info": {
           "package_name": "com.example.jetpacrecicyler"
