@@ -18,6 +18,8 @@ import com.straccion.appmotos1.domain.repository.MotosRepository
 import com.straccion.appmotos1.domain.use_cases.auth.AuthUsesCases
 import com.straccion.appmotos1.domain.use_cases.auth.GetCurrentUser
 import com.straccion.appmotos1.domain.use_cases.auth.Login
+import com.straccion.appmotos1.domain.use_cases.databases.ActualizacionesRealizadas
+import com.straccion.appmotos1.domain.use_cases.databases.ActualizarMotos
 import com.straccion.appmotos1.domain.use_cases.databases.DataBasesUsesCase
 import com.straccion.appmotos1.domain.use_cases.databases.EliminarMoto
 import com.straccion.appmotos1.domain.use_cases.databases.ObtenerAllMotos
@@ -30,12 +32,12 @@ import com.straccion.appmotos1.domain.use_cases.favoritos.ObtenerMotosFavoritas
 import com.straccion.appmotos1.domain.use_cases.favoritos.QuitarMotosFav
 import com.straccion.appmotos1.domain.use_cases.obtener_motos.ObtenerMotosUsesCase
 import com.straccion.appmotos1.domain.use_cases.obtener_motos.ObtenerMotosVisibles
+import com.straccion.appmotos1.domain.use_cases.obtener_motos.SumarVisitas
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Named
-import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -67,7 +69,8 @@ object AppModule {
     @Provides
     fun providesObtenerMotossesCases(repository: MotosRepository) = ObtenerMotosUsesCase(
         obtenerMotosVisibles = ObtenerMotosVisibles(repository),
-        obtenerMotosById = ObtenerMotosById(repository)
+        obtenerMotosById = ObtenerMotosById(repository),
+        sumarVisitas = SumarVisitas(repository)
     )
 
     @Provides
@@ -88,8 +91,11 @@ object AppModule {
         updateFichaTec = UpdateFichaTec(repository),
         ocultarMotocicleta = OcultarMotocicleta(repository),
         eliminarMoto = EliminarMoto(repository),
-        obtenerAllMotos = ObtenerAllMotos(repository)
+        obtenerAllMotos = ObtenerAllMotos(repository),
+        actualizarMotos = ActualizarMotos(repository),
+        actualizacionesRealizadas = ActualizacionesRealizadas(repository)
     )
     @Provides
     fun providerDataBaseRepository(impl: DataBasesRepositoryImpl): DataBaseRepository = impl
+
 }

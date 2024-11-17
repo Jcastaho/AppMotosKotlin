@@ -24,6 +24,7 @@
 
     <application
         android:name=".Appmotos1"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="true"
         android:enableOnBackInvokedCallback="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -43,6 +44,18 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!--Esto es para los deeplinks que aun no se han configurado -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="appmotos1.page.link"
+                    android:scheme="https"/>
+            </intent-filter>
+            <!--Esto es para los deeplinks que aun no se han configurado -->
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

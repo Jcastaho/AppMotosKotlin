@@ -25,6 +25,15 @@ class CompararMotosViewModel @Inject constructor(
     private val _motosResponse = MutableStateFlow<Response<List<CategoriaMotos>>>(Response.Success(emptyList()))
     val motosResponse: StateFlow<Response<List<CategoriaMotos>>> = _motosResponse.asStateFlow()
 
+
+    var busqueda by mutableStateOf("")
+        private set
+
+    // Estado para las motos filtradas
+    private val _motosFiltradas = MutableStateFlow<List<CategoriaMotos>>(emptyList())
+    val motosFiltradas: StateFlow<List<CategoriaMotos>> = _motosFiltradas.asStateFlow()
+
+
     init {
         getMotos()
     }
@@ -36,6 +45,7 @@ class CompararMotosViewModel @Inject constructor(
                 _motosResponse.value = response
                 if (response is Response.Success) {
                     _motosDisponibles.value = response.data.sortedBy { it.id }
+                    _motosFiltradas.value = _motosDisponibles.value
                 }
             }
         } catch (e: Exception) {
@@ -68,4 +78,19 @@ class CompararMotosViewModel @Inject constructor(
         }.sortedBy { it.id }
     }
     //endregion
+
+    fun onSearchQueryChanged(query: String) {
+        busqueda = query
+        filterMotos()
+    }
+    private fun filterMotos() {
+        _motosFiltradas.value = if (busqueda.isBlank()) {
+            _motosDisponibles.value
+        } else {
+            _motosDisponibles.value.filter { moto ->
+                moto.id.contains(busqueda, ignoreCase = true) ||
+                        moto.marcaMoto.contains(busqueda, ignoreCase = true)
+            }
+        }
+    }
 }

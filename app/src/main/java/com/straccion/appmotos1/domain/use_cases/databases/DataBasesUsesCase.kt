@@ -4,5 +4,7 @@ data class DataBasesUsesCase (
     val updateFichaTec: UpdateFichaTec,
     val ocultarMotocicleta: OcultarMotocicleta,
     val eliminarMoto: EliminarMoto,
-    val obtenerAllMotos: ObtenerAllMotos
+    val obtenerAllMotos: ObtenerAllMotos,
+    val actualizarMotos: ActualizarMotos,
+    val actualizacionesRealizadas: ActualizacionesRealizadas,
 )

@@ -28,6 +28,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.straccion.appmotos1.domain.model.CategoriaMotos
@@ -39,43 +40,14 @@ import com.straccion.appmotos1.QuestionnaireState
 fun VistaPreguntasFiltro(
     viewModel: MotosViewModel,
     questionnaireState: QuestionnaireState,
-    onMotoClick: (CategoriaMotos) -> Unit = {}
+    onMotoClick: (CategoriaMotos) -> Unit = {},
+    viewModel2: MMIdealViewModel = hiltViewModel()
+
 ) {
     val filteredMotos by viewModel.motosRecomendadas.collectAsState()
+    val questions = viewModel2.questions
 
-    val questions = listOf(
-        Question(
-            "¿Qué presupuesto tienes pensado para comprar una moto nueva?",
-            listOf(
-                "Menos de $7.000.000", "Entre $7.000.000 y $10.000.000",
-                "Entre $10.000.000 y $15.000.000", "Más de $15.000.000"
-            )
-        ),
-        Question(
-            "¿Cuál será principalmente el uso de la moto?",
-            listOf("Uso cotidiano en ciudad", "Viajes", "Trabajo", "Uso mixto")
-        ),
-        Question(
-            "¿Qué tan importante es la eficiencia de combustible para ti?",
-            listOf("Muy importante", "Moderadamente importante", "No es importante")
-        ),
-        Question(
-            "¿Prefieres una moto con transmisión manual o automática?",
-            listOf("Manual", "Semiautomática", "Automática", "No es relevante")
-        ),
-        Question(
-            "¿Qué nivel de experiencia tienes como motociclista?",
-            listOf("Principiante", "Intermedio", "Experto")
-        ),
-        Question(
-            "¿Llevarás un segundo pasajero con frecuencia?",
-            listOf("Sí", "No")
-        ),
-        Question(
-            "¿Con qué frecuencia usarás la moto para trabajar?",
-            listOf("Diariamente", "Algunas veces a la semana", "Ocasionalmente")
-        )
-    )
+
     if (!questionnaireState.isCompleted) {
         // Mostrar las preguntas mientras no se haya completado el cuestionario
         Preguntas(
@@ -130,7 +102,6 @@ fun VistaPreguntasFiltro(
             }
         }
     }
-
 }
 
 @Composable

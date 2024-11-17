@@ -1,0 +1,153 @@
+package com.straccion.appmotos1.presentation.screens.vistaestadistica.components
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.formatter.ValueFormatter
+import com.straccion.appmotos1.presentation.screens.vistaestadistica.EstadisticaViewModel
+
+@Composable
+fun GraficoMotosMasBuscadas(
+    listaMasBuscadas: List<Pair<String, Int>>,
+    viewModel: EstadisticaViewModel = hiltViewModel()
+) {
+    var showDialog by viewModel.mostrarDialog3
+    val motosMasBuscadasInfo by viewModel.motosMasBuscadasInfo.collectAsState()
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            modifier = Modifier
+                .padding(vertical = 15.dp),
+            text = "Motos Mas Buscadas",
+            fontSize = 25.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp)
+        ) {
+            AndroidView(
+                modifier = Modifier
+                    .fillMaxSize(),
+                factory = { context ->
+                    PieChart(context).apply {
+                        description.isEnabled = false
+                        isDrawHoleEnabled = true
+                        holeRadius = 58f
+                        legend.isEnabled = false // Deshabilitamos la leyenda inferior
+                        setDrawEntryLabels(true)
+                        setDrawMarkers(true)
+                        // Animación opcional
+                        animateY(1000)
+                        // Configuración de las etiquetas
+                        setEntryLabelTextSize(10f)
+                        setEntryLabelColor(android.graphics.Color.BLACK)
+                        // Habilitar interacción
+                        isHighlightPerTapEnabled = true
+                        setTouchEnabled(true)
+                    }
+                },
+                update = { chart ->
+                    val entries = listaMasBuscadas.map { (id, vistas) ->
+                        PieEntry(
+                            vistas.toFloat(),
+                            id // El ID se mostrará como etiqueta
+                        )
+                    }
+                    // Definir colores para el gráfico
+                    val colors = listOf(
+                        android.graphics.Color.parseColor("#FFB5E8"), // Rosa claro
+                        android.graphics.Color.parseColor("#B5FFE9"), // Menta suave
+                        android.graphics.Color.parseColor("#AFF8DB"), // Verde agua
+                        android.graphics.Color.parseColor("#85E3FF"), // Azul cielo
+                        android.graphics.Color.parseColor("#FFE5B5"), // Durazno
+                        android.graphics.Color.parseColor("#BFAEE3"), // Lavanda
+                        android.graphics.Color.parseColor("#FFC5BF"), // Coral suave
+                        android.graphics.Color.parseColor("#B5FFCD"), // Verde menta claro
+                        android.graphics.Color.parseColor("#FFB8B8"), // Rosa salmón claro
+                        android.graphics.Color.parseColor("#B5B9FF")  // Azul lavanda
+                    )
+                    val dataSet = PieDataSet(entries, "").apply {
+                        setColors(colors)
+                        valueTextSize = 12f
+                        sliceSpace = 2f
+
+                        // Formatear valores sin decimales
+                        valueFormatter = object : ValueFormatter() {
+                            override fun getFormattedValue(value: Float): String {
+                                return "${value.toInt()}"
+                            }
+                        }
+                    }
+                    val pieData = PieData(dataSet)
+                    chart.data = pieData
+                }
+            )
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                IconButton(
+                    onClick = {
+                        showDialog = true
+                    },
+                    modifier = Modifier
+                        .size(40.dp)
+                        .background(
+                            color = Color.White,
+                            shape = CircleShape
+                        )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = "Info"
+                    )
+                }
+            }
+        }
+        Divider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 20.dp, horizontal = 16.dp),  // Añade espacio arriba del divider
+            color = Color.Gray,    // Color opcional
+            thickness = 1.dp            // Grosor opcional
+        )
+    }
+    if (showDialog) {
+        DialogInfo("Motos Mas Buscadas", motosMasBuscadasInfo)
+    }
+}

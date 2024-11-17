@@ -1,5 +1,6 @@
 package com.straccion.appmotos1.presentation.screens.vistabasededatos.vistas_database.editar_registros.components
 
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,6 +27,7 @@ fun ImagenMotoEditar(
             .crossfade(true)
             .build()
     }
+    Spacer(modifier = Modifier.padding(top = 55.dp))
     if (imageLoadError.value || imagenPrincipal.isEmpty()) {
         Text("Error al cargar la imagen", color = Color.Red, modifier = Modifier.padding(16.dp))
     } else {

@@ -1,4 +1,4 @@
-package com.straccion.appmotos1.presentation.screens.vistabasededatos.vistas_database.database_agregar
+package com.straccion.appmotos1.presentation.screens.vistabasededatos.vistas_database.database_agregar.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -16,21 +16,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,25 +30,22 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.straccion.appmotos1.MotosViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.straccion.appmotos1.R
 import com.straccion.appmotos1.presentation.components.DefaultButton
 import com.straccion.appmotos1.presentation.components.DefaultOutlinedTextField
+import com.straccion.appmotos1.presentation.screens.vistabasededatos.vistas_database.database_agregar.AggRegistroViewModel
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AggRegistro(viewModel: MotosViewModel) {
-    val state by viewModel.state.collectAsState()
+fun VistaAggRegistro(
+    viewModel: AggRegistroViewModel = hiltViewModel()
+) {
+    val nombreMotoaRegistrar by viewModel.nombreMotoaRegistrar.collectAsState()
+    val fabricanteText by viewModel.fabricanteText.collectAsState()
+    val marcaText by viewModel.marcaText.collectAsState()
+    val categoriaText by viewModel.categoriaText.collectAsState()
 
-    var fabricanteText by remember { mutableStateOf(false) }
-    var marcaText by remember { mutableStateOf(false) }
-    var categoriaText by remember { mutableStateOf(false) }
-    var nombreMotoaRegistrar by remember { mutableStateOf("") }
 
-    LaunchedEffect(Unit) {
-        viewModel.listaMarcas()
-    }
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -94,11 +82,11 @@ fun AggRegistro(viewModel: MotosViewModel) {
                                 DefaultOutlinedTextField(
                                     modifier = Modifier
                                         .fillMaxWidth(),
-                                    value = state.selectedFrabricante ?: "",
+                                    value = fabricanteText.second,
                                     onValueChange = { },
                                     label = stringResource(R.string.fabricante),
                                     readOnly = true,
-                                    onIconClick = { fabricanteText = true },
+                                    onIconClick = { viewModel.mostrarFabricante() },
                                     icon = Icons.Filled.ArrowDropDown
                                 )
                             }
@@ -107,16 +95,16 @@ fun AggRegistro(viewModel: MotosViewModel) {
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
-                                    .clickable { categoriaText = true }
+                                    .clickable { viewModel.mostrarCategoria() }
                             ) {
                                 DefaultOutlinedTextField(
                                     modifier = Modifier
                                         .fillMaxWidth(),
-                                    value = state.selectedMarca ?: "",
+                                    value = marcaText.second,
                                     onValueChange = { },
                                     label = stringResource(R.string.marca),
                                     readOnly = true,
-                                    onIconClick = { marcaText = true },
+                                    onIconClick = { viewModel.mostrarMarca() },
                                     icon = Icons.Filled.ArrowDropDown
                                 )
                             }
@@ -125,16 +113,16 @@ fun AggRegistro(viewModel: MotosViewModel) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 10.dp)
-                                .clickable { categoriaText = true }
+                                .clickable { viewModel.mostrarCategoria() }
                         ) {
                             DefaultOutlinedTextField(
                                 modifier = Modifier
                                     .fillMaxWidth(),
-                                value = state.selectedCategoriasMotos ?: "",
+                                value = categoriaText.second,
                                 onValueChange = { },
                                 label = stringResource(R.string.categoria),
                                 readOnly = true,
-                                onIconClick = { categoriaText = true },
+                                onIconClick = { viewModel.mostrarCategoria() },
                                 icon = Icons.Filled.ArrowDropDown
                             )
                         }
@@ -147,12 +135,10 @@ fun AggRegistro(viewModel: MotosViewModel) {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(bottom = 12.dp),
-                                value = state.nombreMotoaRegistrar?.takeIf { it.isNotEmpty() }
-                                    ?: "",
+                                value = nombreMotoaRegistrar,
                                 onValueChange = {
-                                    nombreMotoaRegistrar = it
-                                    viewModel.selectOption("nombre", it)
-                                } ,
+                                   viewModel.nombreMoto(it)
+                                },
                                 label = stringResource(R.string.nombreMoto),
                                 onIconClick = { /*TODO*/ },
                                 icon = null
@@ -161,7 +147,7 @@ fun AggRegistro(viewModel: MotosViewModel) {
                     }
                 }
             }
-            item{
+            item {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -182,7 +168,7 @@ fun AggRegistro(viewModel: MotosViewModel) {
                                 .shadow(8.dp, RoundedCornerShape(28.dp)) // Sombra para efecto 3D
                                 .align(Alignment.CenterHorizontally),
                             text = "Registrar Moto Manual",
-                            onClick = {  },
+                            onClick = { },
                         )
                         DefaultButton(
                             modifier = Modifier
@@ -197,63 +183,11 @@ fun AggRegistro(viewModel: MotosViewModel) {
                                 .shadow(8.dp, RoundedCornerShape(28.dp)) // Sombra para efecto 3D
                                 .align(Alignment.CenterHorizontally),
                             text = "Registrar Moto Web Scraping",
-                            onClick = {  },
+                            onClick = {
+                                viewModel.showDialogWebScraping()
+                            },
                         )
                     }
-                }
-            }
-        }
-    }
-    if (fabricanteText) {
-        ModalBottomSheet(
-            onDismissRequest = { fabricanteText = false }
-        ) {
-            LazyColumn {
-                items(state.listaFrabricanteMotos.distinct()) { fabricante ->
-                    ListItem(
-                        headlineContent = { Text(fabricante) },
-                        modifier = Modifier.clickable {
-                            viewModel.selectOption("fabricante", fabricante)
-                            fabricanteText = false
-                        }
-                    )
-                }
-            }
-
-        }
-    }
-
-    if (marcaText) {
-        ModalBottomSheet(
-            onDismissRequest = { marcaText = false }
-        ) {
-            LazyColumn() {
-                items(state.listaMarcasMotos.distinct()) { marca ->
-                    ListItem(
-                        headlineContent = { Text(marca) },
-                        modifier = Modifier
-                            .clickable {
-                                viewModel.selectOption("marca", marca)
-                                marcaText = false
-                            }
-                    )
-                }
-            }
-        }
-    }
-    if (categoriaText) {
-        ModalBottomSheet(
-            onDismissRequest = { categoriaText = false },
-        ) {
-            LazyColumn {
-                items(state.listaCategoriasMotos.distinct()) { categoria ->
-                    ListItem(
-                        headlineContent = { Text(categoria) },
-                        modifier = Modifier.clickable {
-                            viewModel.selectOption("categoria", categoria)
-                            categoriaText = false
-                        }
-                    )
                 }
             }
         }

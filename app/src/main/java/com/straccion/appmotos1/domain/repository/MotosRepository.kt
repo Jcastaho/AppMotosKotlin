@@ -8,4 +8,5 @@ import kotlinx.coroutines.flow.Flow
 interface MotosRepository {
     suspend fun getMotosVisibles(): Flow<Response<List<CategoriaMotos>>>
     suspend fun getMotosById(idMoto: String): Flow<Response<List<CategoriaMotos>>>
+    suspend fun sumarVisitas(idMoto: String, busqueda: Boolean): Response<Boolean>
 }

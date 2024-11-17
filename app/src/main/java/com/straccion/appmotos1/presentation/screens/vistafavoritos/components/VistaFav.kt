@@ -64,7 +64,7 @@ fun VistaFav(
                             val id = moto.id
                             val idEncoded = URLEncoder.encode(id, StandardCharsets.UTF_8.toString())
                             navHostController.navigate(
-                                route = DrawerScreen.Inicio.DetallesMoto.passMotos(encodedMoto, idEncoded)
+                                route = DrawerScreen.Inicio.DetallesMoto.passMotos(encodedMoto, idEncoded, false)
                             )
                         }
                     }

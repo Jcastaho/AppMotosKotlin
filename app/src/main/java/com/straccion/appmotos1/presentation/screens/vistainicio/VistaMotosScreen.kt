@@ -22,7 +22,7 @@ import com.straccion.appmotos1.presentation.screens.vistainicio.components.GetMo
 @Composable
 fun VistaMotosScreen(
     navHostController: NavHostController,
-    viewModel: VistaInicioViewModel = hiltViewModel(),
+    viewModel: VistaInicioViewModel = hiltViewModel()
 ) {
     val busqueda = viewModel.busqueda
     Scaffold(

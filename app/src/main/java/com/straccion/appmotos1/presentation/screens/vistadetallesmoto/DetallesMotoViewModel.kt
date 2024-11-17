@@ -1,9 +1,5 @@
 package com.straccion.appmotos1.presentation.screens.vistadetallesmoto
 
-import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,7 +15,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.net.URLDecoder
@@ -37,6 +32,8 @@ class DetallesMotoViewModel @Inject constructor(
 
     private val encodedData = savedStateHandle.get<String>("moto")
     private val encodeIdMoto = savedStateHandle.get<String>("motoId")
+    private val busqueda = savedStateHandle.get<String>("busqueda") ?: "false"
+
 
     private val _motoById = MutableStateFlow<Response<List<CategoriaMotos>>>(Response.Loading)
     val motoById: StateFlow<Response<List<CategoriaMotos>>> = _motoById.asStateFlow()
@@ -45,8 +42,7 @@ class DetallesMotoViewModel @Inject constructor(
     val moto: StateFlow<CategoriaMotos> = _moto.asStateFlow()
 
     //obtener las motos favoritas
-    private val _motosFavoritas =
-        MutableStateFlow<Response<List<FavoritasUsuarios>>>(Response.Loading)
+    private val _motosFavoritas = MutableStateFlow<Response<List<FavoritasUsuarios>>>(Response.Loading)
     val motosFavoritas: StateFlow<Response<List<FavoritasUsuarios>>> = _motosFavoritas.asStateFlow()
     val currentUser = authUsesCases.getCurrentUser()?.uid
 
@@ -87,7 +83,7 @@ class DetallesMotoViewModel @Inject constructor(
     init {
         loadMotoDetails()
     }
-
+    //region obtener las motos favoritas
     private fun loadMotoDetails() {
         viewModelScope.launch {
             val decodedMoto = decodeMotoData(encodedData)
@@ -150,8 +146,9 @@ class DetallesMotoViewModel @Inject constructor(
             }
         } ?: ""
     }
+    //endregion
 
-    //Funciones para controlar las favoritas
+    //region Funciones para controlar las favoritas
     fun agregarMotoFav(motoId: String) {
         viewModelScope.launch {
             currentUser?.let { uid ->
@@ -171,7 +168,12 @@ class DetallesMotoViewModel @Inject constructor(
             val result = favoritasUsesCase.quitarMotosFav(resultado, uid)
         }
     }
+    //endregion
 
+    //region funcion para sumar visitas
+    fun sumarVisitas(id: String)= viewModelScope.launch {
+        obtenerMotosUsesCase.sumarVisitas(id, busqueda.toBoolean())
+    }
 }
 
 

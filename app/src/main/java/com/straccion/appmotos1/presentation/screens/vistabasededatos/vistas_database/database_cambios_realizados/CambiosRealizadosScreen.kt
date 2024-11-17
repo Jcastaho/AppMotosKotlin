@@ -1,22 +1,21 @@
-package com.straccion.appmotos1.presentation.screens.vistaestadistica
+package com.straccion.appmotos1.presentation.screens.vistabasededatos.vistas_database.database_cambios_realizados
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Scaffold
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.straccion.appmotos1.presentation.screens.vistaestadistica.components.GetDatosEstadistica
+import com.straccion.appmotos1.presentation.screens.vistabasededatos.vistas_database.database_cambios_realizados.components.GetMotosCambios
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun VistaEstadistica(
-){
+fun CambiosRealizadosScreen(
+
+) {
     Scaffold(
         content = { paddingValues ->
             // Pasar el paddingValues para evitar que el contenido se superponga con el topBar
             Box(modifier = Modifier.padding(top = paddingValues.calculateTopPadding())) {
-                GetDatosEstadistica()
+                GetMotosCambios()
             }
         }
     )

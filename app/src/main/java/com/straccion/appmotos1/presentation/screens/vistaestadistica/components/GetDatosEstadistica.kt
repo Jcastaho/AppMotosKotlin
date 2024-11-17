@@ -1,35 +1,29 @@
-package com.straccion.appmotos1.presentation.screens.vistadetallesmoto.components
+package com.straccion.appmotos1.presentation.screens.vistaestadistica.components
 
 import android.widget.Toast
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.straccion.appmotos1.domain.model.CategoriaMotos
 import com.straccion.appmotos1.domain.model.Response
 import com.straccion.appmotos1.presentation.components.DefaultProgressBar
-import com.straccion.appmotos1.presentation.screens.vistadetallesmoto.DetallesMotoViewModel
+import com.straccion.appmotos1.presentation.screens.vistaestadistica.EstadisticaViewModel
 
 @Composable
-fun Detalles(
-    moto: CategoriaMotos,
-    viewModel: DetallesMotoViewModel = hiltViewModel()
+fun GetDatosEstadistica(
+    viewModel: EstadisticaViewModel = hiltViewModel()
 ) {
-    val motosResponse by viewModel.motoById.collectAsState()
+    val motosResponse by viewModel.motos.collectAsState()
     val context = LocalContext.current
 
-    LaunchedEffect(true) {
-        viewModel.sumarVisitas(moto.id)
-    }
 
     when (val response = motosResponse) {
         Response.Loading -> {
             DefaultProgressBar()
         }
         is Response.Success -> {
-            DetallesMotoContent(moto)
+            VistaGraficos()
         }
         is Response.Failure -> {
             Toast.makeText(

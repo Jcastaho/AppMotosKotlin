@@ -27,10 +27,11 @@ data class CategoriaMotos(
     val diferenciaValor: Int = 0,
     val precioActual: Int = 0,
     val precioAnterior: Int = 0,
+    var vistas: Int = 0,
+    var busquedas: Int = 0,
     val visible: Boolean = true,
     var descuento: Boolean = false,
-    var favoritos: Boolean = false,
-    var listaFavoritos: List<String> = listOf(),
+    var favoritos: Boolean = false,//hay que quitarlo
     var uidUser: String = ""
 ) {
     fun toJson(): String = Gson().toJson(
@@ -57,10 +58,11 @@ data class CategoriaMotos(
             diferenciaValor,
             precioActual,
             precioAnterior,
+            vistas,
+            busquedas,
             visible,
             descuento,
             favoritos,
-            listaFavoritos,
             uidUser
         )
     )

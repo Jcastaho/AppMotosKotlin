@@ -56,8 +56,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.straccion.appmotos1.MotosViewModel
 import com.straccion.appmotos1.R
 import com.straccion.appmotos1.presentation.screens.vistaestadistica.VistaEstadistica
-import com.straccion.appmotos1.presentation.screens.vistabasededatos.vistas_database.database_agregar.AggRegistro
-import com.straccion.appmotos1.presentation.screens.vistamimotoideal.VistaPreguntasFiltro
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +64,6 @@ import kotlinx.coroutines.launch
 fun PantallaInicial(navController: NavHostController) {
     val viewModel: MotosViewModel = viewModel()
     val state by viewModel.state.collectAsState()
-    val questionnaireState by viewModel.questionnaireState.collectAsState()
 
     var tituloSuperior by remember { mutableStateOf("") }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -269,7 +266,6 @@ fun PantallaInicial(navController: NavHostController) {
                         if (currentRoute == Pantallas.PantallaDetallesMoto.route) {
                             if (state.selectedMotos != null) {
                                 state.selectedMotos?.let { moto ->
-                                    val isFavorite by viewModel.isFavorite.collectAsState()
                                     IconButton(
                                         onClick = {
                                             //viewModel.toggleFavorite(moto.id)
@@ -318,9 +314,6 @@ fun PantallaInicial(navController: NavHostController) {
 //                    composable(route = Pantallas.BasedeDatos.route) {
 //                        VistaBasedeDatos(navController)
 //                    }
-                    composable(route = Pantallas.AggRegistro.route) {
-                        AggRegistro(viewModel = viewModel)
-                    }
 //                    composable(route = Pantallas.ModRegistro.route) {
 //                        ModRegistro(
 //                            state = state,
@@ -360,18 +353,18 @@ fun PantallaInicial(navController: NavHostController) {
 //                            Text("Moto no encontrada")
 //                        }
 //                    }
-                    composable(route = Pantallas.VistaPreguntas.route) {
-                        VistaPreguntasFiltro(
-                            viewModel = viewModel,
-                            questionnaireState = questionnaireState,
-                            onMotoClick = { moto ->
-                                viewModel.selectMoto(moto)
-                                navController.navigate(
-                                    Pantallas.PantallaDetallesMoto.createRoute(moto.id)
-                                )
-                            },
-                        )
-                    }
+//                    composable(route = Pantallas.VistaPreguntas.route) {
+//                        VistaPreguntasFiltro(
+//                            viewModel = viewModel,
+//                            questionnaireState = questionnaireState,
+//                            onMotoClick = { moto ->
+//                                viewModel.selectMoto(moto)
+//                                navController.navigate(
+//                                    Pantallas.PantallaDetallesMoto.createRoute(moto.id)
+//                                )
+//                            },
+//                        )
+//                    }
 //                    composable(route = Pantallas.CompararMotos.route) {
 //                        CompararMotosMenu(
 //                            state = state,

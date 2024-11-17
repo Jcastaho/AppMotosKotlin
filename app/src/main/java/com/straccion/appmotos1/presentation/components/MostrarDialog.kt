@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -39,7 +41,9 @@ fun AlertDialogExitoso(
     dialogTitle: String,
     dialogText: String,
     gifResourceId: Int,
-    mostrarBoton: Boolean = true
+    mostrarBoton: Boolean = true,
+    mostrarBotonAdd: Boolean = false,
+    mostrarDatos: () -> Unit = {},
 ) {
     AlertDialog(
         icon = {
@@ -75,6 +79,21 @@ fun AlertDialogExitoso(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center  // Esto centra el botón
                 ) {
+                    if (mostrarBotonAdd){
+                        DefaultButton(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(22.dp))
+                                .background(
+                                    brush = Brush.horizontalGradient(
+                                        colors = listOf(Color(0xFF2193b0), Color(0xFF6dd5ed))
+                                    )
+                                ),
+                            text = "Mostar Cambios",
+                            contentPadding = PaddingValues(horizontal = 25.dp, vertical = 8.dp),
+                            onClick = { mostrarDatos() }
+                        )
+                        Spacer(modifier = Modifier.padding(2.dp))
+                    }
                     DefaultButton(
                         modifier = Modifier
                             .clip(RoundedCornerShape(22.dp))
@@ -84,7 +103,7 @@ fun AlertDialogExitoso(
                                 )
                             ),
                         text = "Confirmar",
-                        contentPadding = PaddingValues(horizontal = 25.dp, vertical = 8.dp),
+                        contentPadding = PaddingValues(horizontal = 25.dp, vertical = 7.dp),
                         onClick = { onConfirmation() }
                     )
                 }

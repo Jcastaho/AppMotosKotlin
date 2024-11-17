@@ -19,18 +19,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.straccion.appmotos1.domain.model.CategoriaMotos
 import com.straccion.appmotos1.presentation.components.DefaultAsyncImage
 import com.straccion.appmotos1.presentation.navigation.DrawerScreen
+import com.straccion.appmotos1.presentation.screens.vistainicio.VistaInicioViewModel
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 @Composable
 fun MotosCard(
     navHostController: NavHostController,
-    motos: CategoriaMotos
+    motos: CategoriaMotos,
+    viewModel: VistaInicioViewModel = hiltViewModel()
 ) {
+    val busqueda = viewModel.busqueda
     Card(
         modifier = Modifier
             .padding(4.dp)
@@ -40,8 +44,9 @@ fun MotosCard(
                 val encodedMoto = URLEncoder.encode(motos.toJson(), StandardCharsets.UTF_8.toString())
                 val id = motos.id
                 val idEnconde = URLEncoder.encode(id, StandardCharsets.UTF_8.toString())
+                val bus = busqueda.isNotEmpty() // devuelve true si busqueda no esta vacio
                 navHostController.navigate(
-                    route = DrawerScreen.Inicio.DetallesMoto.passMotos(encodedMoto, idEnconde)
+                    route = DrawerScreen.Inicio.DetallesMoto.passMotos(encodedMoto, idEnconde, bus)
                 )
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)

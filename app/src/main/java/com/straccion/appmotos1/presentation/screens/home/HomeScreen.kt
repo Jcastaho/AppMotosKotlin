@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.DrawerValue
@@ -61,6 +63,13 @@ fun HomeScreen(
     val currentRoute = navBackStackEntry?.destination?.route
     val currentScreenTitle = getTitleForRoute(currentRoute)
 
+    fun shouldShowBackArrow(): Boolean {
+        return currentRoute?.startsWith(DrawerScreen.Inicio.DetallesMoto.route) == true ||
+                currentRoute == DrawerScreen.Base_Datos_Vista.AgregarRegistro.route ||
+                currentRoute == DrawerScreen.Base_Datos_Vista.AgregarRegistro.Cambios.route ||
+                currentRoute == DrawerScreen.Base_Datos_Vista.ModificarRegistro.EditarRegistro.route
+    }
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -90,7 +99,15 @@ fun HomeScreen(
     ) {
         Scaffold(
             topBar = {
-                if (currentRoute?.startsWith(DrawerScreen.Inicio.DetallesMoto.route) == true) {
+                if (shouldShowBackArrow()) {
+                    TopAppBar(
+                        title = { Text(currentScreenTitle) },
+                        navigationIcon = {
+                            IconButton(onClick = { navHostController.navigateUp() }) {
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Regresar")
+                            }
+                        }
+                    )
                 } else {
                     TopAppBar(
                         title = { Text(currentScreenTitle) },
@@ -98,12 +115,12 @@ fun HomeScreen(
                             IconButton(onClick = { scope.launch { drawerState.open() } }) {
                                 Icon(Icons.Default.Menu, contentDescription = "Menu")
                             }
-                        },
+                        }
                     )
                 }
             }
         ) { innerPadding ->
-            if (currentRoute?.startsWith(DrawerScreen.Inicio.DetallesMoto.route) == true) {
+            if (shouldShowBackArrow()) {
                 NavigationDrawerGraph(navHostController)
             }else{
                 Box(modifier = Modifier.padding(innerPadding)) {
@@ -160,6 +177,7 @@ fun getTitleForRoute(route: String?): String {
         DrawerScreen.Inicio.DetallesMoto.route -> DrawerScreen.Inicio.DetallesMoto.title
         DrawerScreen.Base_Datos_Vista.route -> DrawerScreen.Base_Datos_Vista.title
         DrawerScreen.Base_Datos_Vista.AgregarRegistro.route -> DrawerScreen.Base_Datos_Vista.AgregarRegistro.title
+        DrawerScreen.Base_Datos_Vista.AgregarRegistro.Cambios.route -> DrawerScreen.Base_Datos_Vista.AgregarRegistro.Cambios.title
         DrawerScreen.Base_Datos_Vista.ModificarRegistro.route -> DrawerScreen.Base_Datos_Vista.ModificarRegistro.title
         DrawerScreen.Base_Datos_Vista.ModificarRegistro.EditarRegistro.route -> DrawerScreen.Base_Datos_Vista.ModificarRegistro.EditarRegistro.title
         DrawerScreen.Base_Datos_Vista.EliminarRegistro.route -> DrawerScreen.Base_Datos_Vista.EliminarRegistro.title
@@ -167,7 +185,7 @@ fun getTitleForRoute(route: String?): String {
         DrawerScreen.MiMotoIdeal.route -> DrawerScreen.MiMotoIdeal.title
         DrawerScreen.Favoritas.route -> DrawerScreen.Favoritas.title
         DrawerScreen.Estadistica.route -> DrawerScreen.Estadistica.title
-        else -> "Default Title"
+        else -> ""
     }
 }
 
