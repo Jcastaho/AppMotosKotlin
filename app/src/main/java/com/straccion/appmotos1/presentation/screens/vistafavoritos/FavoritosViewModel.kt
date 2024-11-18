@@ -1,6 +1,7 @@
 package com.straccion.appmotos1.presentation.screens.vistafavoritos
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -121,7 +122,13 @@ class FavoritosViewModel @Inject constructor(
 
     fun compartir(context: Context, motosSeleccionadas: Response<List<CategoriaMotos>>) {
         viewModelScope.launch {
-            CompartirImagenes(context, motosSeleccionadas)
+            try {
+                Log.d("ViewModel", "Iniciando compartir...")
+                CompartirImagenes(context, motosSeleccionadas)
+            } catch (e: Exception) {
+                Log.e("ViewModel", "Error al compartir", e)
+                // Aquí podrías emitir un estado de error si lo necesitas
+            }
         }
     }
 

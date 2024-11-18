@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.straccion.appmotos1.presentation.screens.vistabasededatos.vistas_database.database_agregar.components.VentanasAggRegistro
 import com.straccion.appmotos1.presentation.screens.vistabasededatos.vistas_database.database_agregar.components.VistaAggRegistro
@@ -14,18 +14,15 @@ import com.straccion.appmotos1.presentation.screens.vistabasededatos.vistas_data
 
 @Composable
 fun AggRegistroScreen(navHostController: NavHostController) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Scaffold(
-            topBar = {
+    Scaffold(
+        topBar = {
 
-            },
-            content = { paddingValues ->
-                // Pasar el paddingValues para evitar que el contenido se superponga con el topBar
-                Box(modifier = Modifier.padding(top = paddingValues.calculateTopPadding())) {
-                    VistaAggRegistro()
-                }
+        },
+        content = { innerPadding ->
+            Box(modifier = Modifier.padding(innerPadding)) {
+                VistaAggRegistro()
             }
-        )
-        VentanasAggRegistro(navHostController)
-    }
+        }
+    )
+    VentanasAggRegistro(navHostController)
 }

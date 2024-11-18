@@ -1,5 +1,6 @@
 package com.straccion.appmotos1.presentation.screens.vistafavoritos.components
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -13,6 +14,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
 
+@SuppressLint("SuspiciousIndentation")
 suspend fun CompartirImagenes(
     context: Context,
     motosSeleccionadas: Response<List<CategoriaMotos>>
@@ -20,9 +22,13 @@ suspend fun CompartirImagenes(
     withContext(Dispatchers.Default) {
         val motos = when (motosSeleccionadas) {
             is Response.Success -> motosSeleccionadas.data
-            else -> emptyList()
+            else ->{
+                Log.w("Compartir", "No hay motos seleccionadas para compartir")
+                emptyList()
+            }
         }
         val imageUrls = motos.flatMap { it.imagenesPrincipales }
+        Log.d("Compartir", "URLs de imágenes: $imageUrls")
 
         val uriArray: ArrayList<Uri> = ArrayList()
 

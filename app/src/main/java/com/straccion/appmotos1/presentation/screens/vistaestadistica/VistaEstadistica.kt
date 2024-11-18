@@ -2,6 +2,7 @@ package com.straccion.appmotos1.presentation.screens.vistaestadistica
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
@@ -15,7 +16,9 @@ fun VistaEstadistica(
     Scaffold(
         content = { paddingValues ->
             // Pasar el paddingValues para evitar que el contenido se superponga con el topBar
-            Box(modifier = Modifier.padding(top = paddingValues.calculateTopPadding())) {
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = paddingValues.calculateTopPadding())) {
                 GetDatosEstadistica()
             }
         }

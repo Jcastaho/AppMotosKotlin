@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -44,17 +45,16 @@ fun CardsDialogInfo(
     var showDialog3 by viewModel.mostrarDialog3
 
 
-
     // Calcular el porcentaje de progreso
-    var progreso:Float
+    var progreso: Float
 
-    if (showDialog3){
+    if (showDialog3) {
         progreso = if (busquedaMaxima.value > 0) {
             motos.busquedas.toFloat() / busquedaMaxima.value.toFloat()
         } else {
             0f
         }
-    }else{
+    } else {
         progreso = if (maxVistas.value > 0) {
             motos.vistas.toFloat() / maxVistas.value.toFloat()
         } else {
@@ -64,10 +64,12 @@ fun CardsDialogInfo(
 
     Card(
         modifier = Modifier
+            .fillMaxWidth()
             .padding(4.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
+            modifier = Modifier.padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -83,48 +85,37 @@ fun CardsDialogInfo(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp), // Añade padding para separar el contenido de los bordes del Card
-                verticalAlignment = Alignment.CenterVertically // Alinea vert
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                AsyncImage(
+                    modifier = Modifier
+                        .size(width = 80.dp, height = 64.dp),
+                    contentScale = ContentScale.Fit, // Recorta la imagen para llenar el espacio
+                    model = motos.imagenesPrincipales.get(0),
+                    contentDescription = "Moto image"
+                )
                 Box(
                     modifier = Modifier
-                        .height(80.dp)
-                        .width(100.dp),
-                    contentAlignment = Alignment.Center
+                        .weight(1f)
+                        .height(8.dp)
+                        .background(Color.LightGray, RoundedCornerShape(4.dp))
                 ) {
-                    AsyncImage(
-                        contentScale = ContentScale.Fit, // Recorta la imagen para llenar el espacio
-                        model = motos.imagenesPrincipales.get(0),
-                        contentDescription = "Moto image"
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .fillMaxWidth(progreso)
+                            .background(Color.Blue, RoundedCornerShape(4.dp))
                     )
                 }
-                Column(
-                    modifier = Modifier
-                        .weight(0.5f)
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically // Alinea vert
-                    ) {
-                        // Barra de progreso personalizada
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth(progreso) // Llenado en función del progreso
-                                .height(8.dp)
-                                .background(
-                                    Color.Blue,
-                                    shape = RoundedCornerShape(4.dp)
-                                )
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = if (showDialog3) "${motos.busquedas}" else "${motos.vistas}",
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.Bold,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                }
+
+                Text(
+                    text = if (showDialog3) "${motos.busquedas}" else "${motos.vistas}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
 }
+

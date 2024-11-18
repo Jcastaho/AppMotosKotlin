@@ -65,7 +65,6 @@ fun HomeScreen(
 
     fun shouldShowBackArrow(): Boolean {
         return currentRoute?.startsWith(DrawerScreen.Inicio.DetallesMoto.route) == true ||
-                currentRoute == DrawerScreen.Base_Datos_Vista.AgregarRegistro.route ||
                 currentRoute == DrawerScreen.Base_Datos_Vista.AgregarRegistro.Cambios.route ||
                 currentRoute == DrawerScreen.Base_Datos_Vista.ModificarRegistro.EditarRegistro.route
     }
@@ -99,30 +98,37 @@ fun HomeScreen(
     ) {
         Scaffold(
             topBar = {
-                if (shouldShowBackArrow()) {
-                    TopAppBar(
-                        title = { Text(currentScreenTitle) },
-                        navigationIcon = {
-                            IconButton(onClick = { navHostController.navigateUp() }) {
-                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Regresar")
-                            }
-                        }
-                    )
+                if (currentRoute?.startsWith(DrawerScreen.Inicio.DetallesMoto.route) == true) {
+
                 } else {
-                    TopAppBar(
-                        title = { Text(currentScreenTitle) },
-                        navigationIcon = {
-                            IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                                Icon(Icons.Default.Menu, contentDescription = "Menu")
+                    if (shouldShowBackArrow()) {
+                        TopAppBar(
+                            title = { Text(currentScreenTitle) },
+                            navigationIcon = {
+                                IconButton(onClick = { navHostController.navigateUp() }) {
+                                    Icon(
+                                        Icons.AutoMirrored.Filled.ArrowBack,
+                                        contentDescription = "Regresar"
+                                    )
+                                }
                             }
-                        }
-                    )
+                        )
+                    } else {
+                        TopAppBar(
+                            title = { Text(currentScreenTitle) },
+                            navigationIcon = {
+                                IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                                    Icon(Icons.Default.Menu, contentDescription = "Menu")
+                                }
+                            }
+                        )
+                    }
                 }
             }
         ) { innerPadding ->
             if (shouldShowBackArrow()) {
                 NavigationDrawerGraph(navHostController)
-            }else{
+            } else {
                 Box(modifier = Modifier.padding(innerPadding)) {
                     NavigationDrawerGraph(navHostController)
                 }
