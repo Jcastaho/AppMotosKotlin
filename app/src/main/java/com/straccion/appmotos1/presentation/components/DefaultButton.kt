@@ -14,9 +14,9 @@ import androidx.compose.ui.unit.sp
 fun DefaultButton(
     modifier: Modifier,
     text: String,
-    onClick: () -> Unit,
-    colors: ButtonColors = ButtonDefaults.buttonColors(containerColor = Color.Transparent), // Agregamos un parámetro para los colores
+    onClick: () -> Unit, // Agregamos un parámetro para los colores
     enabled: Boolean = true,
+    colors: ButtonColors = ButtonDefaults.buttonColors(containerColor = Color.Transparent), // Agregamos un parámetro para los colores
     fontSize: Int = 14,
     contentPadding: PaddingValues? = PaddingValues()
 ){
@@ -31,6 +31,5 @@ fun DefaultButton(
             text,
             fontSize = fontSize.sp
         )
-
     }
 }

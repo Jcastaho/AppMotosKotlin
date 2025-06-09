@@ -1,8 +1,6 @@
 package com.straccion.appmotos1.data.repository
 
-import android.util.Log
 import com.google.firebase.firestore.CollectionReference
-import com.google.gson.JsonObject
 import com.straccion.appmotos1.core.Constants.MOTOS
 import com.straccion.appmotos1.domain.model.CategoriaMotos
 import com.straccion.appmotos1.domain.model.MotoDiferencias
