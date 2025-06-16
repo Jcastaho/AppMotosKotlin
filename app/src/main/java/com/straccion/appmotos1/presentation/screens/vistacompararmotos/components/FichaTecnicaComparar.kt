@@ -25,7 +25,7 @@ fun FichaTecnicaComparar(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(if (isEven) Color(0xFFF5F5F5) else Color.White)
+            .background(if (isEven) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.onSurface)
             .padding(vertical = 8.dp, horizontal = 16.dp),
     ) {
         Text(
@@ -36,14 +36,16 @@ fun FichaTecnicaComparar(
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
-            fontSize = 15.sp
+            fontSize = 15.sp,
+            color = if (isEven) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.surface
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = valor.toString(),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            color = if (isEven) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.surface
         )
     }
 }

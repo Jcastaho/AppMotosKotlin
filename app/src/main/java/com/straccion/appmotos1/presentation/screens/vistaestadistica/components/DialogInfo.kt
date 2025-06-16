@@ -10,16 +10,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -43,7 +40,7 @@ fun DialogInfo(
     var showDialog3 by viewModel.mostrarDialog3
 
 
-    Dialog (
+    Dialog(
         onDismissRequest = {
             showDialog1 = false
             showDialog2 = false
@@ -53,7 +50,11 @@ fun DialogInfo(
         Box(
             modifier = Modifier
                 .fillMaxWidth(0.9f)
-                .background(Color.White, shape = RoundedCornerShape(16.dp)) // Fondo y forma del cuadro
+                .background(
+                    MaterialTheme.colorScheme.surface,
+                    shape = RoundedCornerShape(16.dp)
+                ) // Fondo y forma del cuadro
+                // Fondo y forma del cuadro
                 .padding(5.dp) // Espaciado interno
         ) {
             Column(
@@ -62,8 +63,8 @@ fun DialogInfo(
             ) {
                 Text(
                     text = titulo.uppercase(),
-                    style = MaterialTheme.typography.h6,
-                    color = Color.Black,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(8.dp))

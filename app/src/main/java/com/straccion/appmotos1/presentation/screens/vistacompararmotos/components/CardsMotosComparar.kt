@@ -1,13 +1,15 @@
 package com.straccion.appmotos1.presentation.screens.vistacompararmotos.components
 
-import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,27 +33,22 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.straccion.appmotos1.domain.model.CategoriaMotos
 import com.straccion.appmotos1.domain.model.MotoSeleccionada
-import com.straccion.appmotos1.presentation.components.DefaultOutlinedTextField
 import com.straccion.appmotos1.presentation.screens.vistacompararmotos.CompararMotosViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,35 +60,69 @@ fun CardsMotosComparar(
     viewModel: CompararMotosViewModel = hiltViewModel()
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
-    val motosDisponibles by viewModel.motosFiltradas.collectAsState()
+    val motosDisponibles by viewModel.motosDisponibles.collectAsState()
+    // Animación para el estado pressed
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
 
+    // Animación de escala
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.95f else 1f,
+        animationSpec = tween(durationMillis = 100)
+    )
     val busqueda = viewModel.busqueda
 
     Card(
         modifier = modifier
-            .padding(2.dp)
-            .clickable { showBottomSheet = true }
-            .fillMaxHeight(),
-        shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(
-            width = 2.dp,
-            color = if (motoSeleccionada.moto != null) MaterialTheme.colorScheme.primary else Color.Transparent
-        )
+            .padding(2.dp) // Más padding para mejor separación
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null
+            ) {
+                showBottomSheet = true
+            }
+            .fillMaxHeight()
+            .scale(scale), // Animación de escala
+        shape = RoundedCornerShape(12.dp), // Bordes más redondeados
+        colors = CardDefaults.cardColors(
+            containerColor = if (motoSeleccionada.moto != null) {
+                MaterialTheme.colorScheme.surface
+            } else {
+                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
+            },
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        elevation = CardDefaults.cardElevation(
+            pressedElevation = 16.dp,
+            hoveredElevation = 12.dp
+        ),
+        border = if (motoSeleccionada.moto != null) {
+            BorderStroke(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+            )
+        } else {
+            BorderStroke(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+            )
+        }
     ) {
         Column(
             modifier = Modifier
-                .padding(8.dp)
+                .padding(16.dp)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Box(
                 modifier = Modifier
-                    .size(90.dp)
-                    .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
+                    .size(100.dp)
             ) {
                 if (motoSeleccionada.moto != null) {
-                    ImagenMotoComparar(url = motoSeleccionada.moto.imagenesPrincipales.firstOrNull() ?: "")
+                    ImagenMotoComparar(
+                        url = motoSeleccionada.moto.imagenesPrincipales.firstOrNull() ?: ""
+                    )
                 } else {
                     Icon(
                         imageVector = Icons.Default.Add,
@@ -141,7 +173,7 @@ fun CardsMotosComparar(
                         //aqui va la funcion de busqueda
                         viewModel.onSearchQueryChanged(it)
                     },
-                    placeholder = { "Buscar motos" },
+                    placeholder = { Text(text = "Buscar motos") },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Search
                     ),

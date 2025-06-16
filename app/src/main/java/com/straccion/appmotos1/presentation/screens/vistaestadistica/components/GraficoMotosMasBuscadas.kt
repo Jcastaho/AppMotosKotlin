@@ -9,15 +9,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -25,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,6 +44,8 @@ fun GraficoMotosMasBuscadas(
 ) {
     var showDialog by viewModel.mostrarDialog3
     val motosMasBuscadasInfo by viewModel.motosMasBuscadasInfo.collectAsState()
+    val backgroundColor = MaterialTheme.colorScheme.background.toArgb()
+
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -71,6 +73,7 @@ fun GraficoMotosMasBuscadas(
                         legend.isEnabled = false // Deshabilitamos la leyenda inferior
                         setDrawEntryLabels(true)
                         setDrawMarkers(true)
+                        setHoleColor(backgroundColor)
                         // Animación opcional
                         animateY(1000)
                         // Configuración de las etiquetas
@@ -128,7 +131,7 @@ fun GraficoMotosMasBuscadas(
                     modifier = Modifier
                         .size(40.dp)
                         .background(
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.background,
                             shape = CircleShape
                         )
                 ) {
@@ -139,7 +142,7 @@ fun GraficoMotosMasBuscadas(
                 }
             }
         }
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 20.dp, horizontal = 16.dp),  // Añade espacio arriba del divider

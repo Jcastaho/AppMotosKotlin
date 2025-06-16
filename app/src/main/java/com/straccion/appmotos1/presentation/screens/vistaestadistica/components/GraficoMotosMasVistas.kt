@@ -1,39 +1,36 @@
 package com.straccion.appmotos1.presentation.screens.vistaestadistica.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
@@ -49,6 +46,7 @@ fun GraficoMotosMasVistas(
 ) {
     var showDialog by viewModel.mostrarDialog1
     val listaMasVistasInfo by viewModel.motosMasVistasInfo.collectAsState()
+    val backgroundColor = MaterialTheme.colorScheme.background.toArgb()
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -77,6 +75,7 @@ fun GraficoMotosMasVistas(
                         legend.isEnabled = false // Deshabilitamos la leyenda inferior
                         setDrawEntryLabels(true)
                         setDrawMarkers(true)
+                        setHoleColor(backgroundColor)
                         // Animación opcional
                         animateY(1000)
                         // Configuración de las etiquetas
@@ -134,7 +133,7 @@ fun GraficoMotosMasVistas(
                     modifier = Modifier
                         .size(40.dp)
                         .background(
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.background,
                             shape = CircleShape
                         )
                 ) {
@@ -145,7 +144,7 @@ fun GraficoMotosMasVistas(
                 }
             }
         }
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 20.dp, horizontal = 16.dp),  // Añade espacio arriba del divider

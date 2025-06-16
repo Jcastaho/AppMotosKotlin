@@ -26,6 +26,4 @@ fun VistaGraficos(
         GraficoMotosMenosVistas(listaMenosVistas)
         GraficoMotosMasBuscadas(listaMasBuscadas)
     }
-
-
 }

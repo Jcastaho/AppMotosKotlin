@@ -14,6 +14,7 @@ import com.straccion.appmotos1.presentation.screens.vistainicio.VistaInicioViewM
 @Composable
 fun GetMotosInicio(
     navHostController: NavHostController,
+    onClick: () -> Unit,
     viewModel: VistaInicioViewModel = hiltViewModel()
 ) {
     val motosResponse by viewModel.motosResponse.collectAsState()
@@ -25,7 +26,7 @@ fun GetMotosInicio(
         }
         is Response.Success -> {
             val motos = response.data
-            Vista(motos, navHostController)
+            Vista(motos, navHostController, onClick)
         }
         is Response.Failure -> {
             Toast.makeText(

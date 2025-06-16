@@ -19,10 +19,11 @@ import javax.inject.Inject
 @HiltViewModel
 class CompararMotosViewModel @Inject constructor(
     private val obtenerMotosUsesCase: ObtenerMotosUsesCase
-): ViewModel() {
+) : ViewModel() {
 
     //region obtener las motos a mostrar
-    private val _motosResponse = MutableStateFlow<Response<List<CategoriaMotos>>>(Response.Success(emptyList()))
+    private val _motosResponse =
+        MutableStateFlow<Response<List<CategoriaMotos>>>(Response.Success(emptyList()))
     val motosResponse: StateFlow<Response<List<CategoriaMotos>>> = _motosResponse.asStateFlow()
 
 
@@ -33,6 +34,14 @@ class CompararMotosViewModel @Inject constructor(
     private val _motosFiltradas = MutableStateFlow<List<CategoriaMotos>>(emptyList())
     val motosFiltradas: StateFlow<List<CategoriaMotos>> = _motosFiltradas.asStateFlow()
 
+
+    private val _motosSeleccionadas = MutableStateFlow(List(3) { MotoSeleccionada() })
+    val motosSeleccionadas: StateFlow<List<MotoSeleccionada>> = _motosSeleccionadas.asStateFlow()
+
+    private val _motosDisponibles = MutableStateFlow<List<CategoriaMotos>>(emptyList())
+    val motosDisponibles: StateFlow<List<CategoriaMotos>> = _motosDisponibles.asStateFlow()
+
+    private val _allMotos = MutableStateFlow<List<CategoriaMotos>>(emptyList())
 
     init {
         getMotos()
@@ -45,6 +54,7 @@ class CompararMotosViewModel @Inject constructor(
                 _motosResponse.value = response
                 if (response is Response.Success) {
                     _motosDisponibles.value = response.data.sortedBy { it.id }
+                    _allMotos.value = response.data.sortedBy { it.id }
                     _motosFiltradas.value = _motosDisponibles.value
                 }
             }
@@ -54,28 +64,35 @@ class CompararMotosViewModel @Inject constructor(
     }
 //endregion
 
+
     // region Seleccion de las motos a comparar
-    private val _motosSeleccionadas = MutableStateFlow(List(3) { MotoSeleccionada() })
-    val motosSeleccionadas: StateFlow<List<MotoSeleccionada>> = _motosSeleccionadas.asStateFlow()
-
-    private val _motosDisponibles = MutableStateFlow<List<CategoriaMotos>>(emptyList())
-    val motosDisponibles: StateFlow<List<CategoriaMotos>> = _motosDisponibles.asStateFlow()
-
     fun seleccionarMoto(index: Int, moto: CategoriaMotos) {
-        val motoAnterior: CategoriaMotos?
+        val motosAnteriores: List<MotoSeleccionada> = _motosSeleccionadas.value
         _motosSeleccionadas.value = _motosSeleccionadas.value.toMutableList().apply {
-            motoAnterior = this[index].moto
             this[index] = MotoSeleccionada(moto = moto)
         }
-
-        actualizarMotosDisponibles(moto, motoAnterior)
+        actualizarMotosDisponibles(_motosSeleccionadas.value, motosAnteriores)
     }
 
-    private fun actualizarMotosDisponibles(nuevaMoto: CategoriaMotos, motoAnterior: CategoriaMotos?) {
-        _motosDisponibles.value = _motosDisponibles.value.toMutableList().apply {
-            remove(nuevaMoto)
-            motoAnterior?.let { add(it) }
-        }.sortedBy { it.id }
+    private fun actualizarMotosDisponibles(
+        motos: List<MotoSeleccionada>,
+        motosAnteriores: List<MotoSeleccionada>
+    ) {
+        // 1. Obtener los IDs de las motos seleccionadas actualmente y anteriormente
+        val idsSeleccionados = motos.mapNotNull { it.moto?.id }
+        val idsAnteriores = motosAnteriores.mapNotNull { it.moto?.id }
+
+        // 2. Motos que estaban seleccionadas pero ya no lo están
+        val idsADesocultar = idsAnteriores - idsSeleccionados
+
+        // 3. Filtrar la lista completa para excluir las motos seleccionadas actualmente
+        val motosFiltradas = _allMotos.value.filter { moto ->
+            moto.id !in idsSeleccionados
+        }
+
+        // 4. Actualizar _motosDisponibles con la lista filtrada
+        _motosDisponibles.value = motosFiltradas
+
     }
     //endregion
 
@@ -83,6 +100,7 @@ class CompararMotosViewModel @Inject constructor(
         busqueda = query
         filterMotos()
     }
+
     private fun filterMotos() {
         _motosFiltradas.value = if (busqueda.isBlank()) {
             _motosDisponibles.value

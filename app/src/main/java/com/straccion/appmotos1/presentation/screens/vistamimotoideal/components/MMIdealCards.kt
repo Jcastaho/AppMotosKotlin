@@ -15,16 +15,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.straccion.appmotos1.domain.model.CategoriaMotos
-import com.straccion.appmotos1.presentation.navigation.DrawerScreen
-import com.straccion.appmotos1.presentation.screens.vistamimotoideal.ImagendeMoto
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
+import com.straccion.appmotos1.presentation.navigation.screen.inicio.InicioScreen
 
 @Composable
 fun MMIdealCards(
     navHostController: NavHostController,
-    motos: CategoriaMotos
+    moto: CategoriaMotos
 ) {
     Card(
         modifier = Modifier
@@ -32,11 +30,8 @@ fun MMIdealCards(
             .width(260.dp) // Set a fixed width
             .wrapContentHeight()
             .clickable{
-                val encodedMoto = URLEncoder.encode(motos.toJson(), StandardCharsets.UTF_8.toString())
-                val id = motos.id
-                val idEnconde = URLEncoder.encode(id, StandardCharsets.UTF_8.toString())
                 navHostController.navigate(
-                    route = DrawerScreen.Inicio.DetallesMoto.passMotos(encodedMoto, idEnconde, false)
+                    route = InicioScreen.DetallesMoto.passMoto(moto, false)
                 )
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
@@ -47,11 +42,13 @@ fun MMIdealCards(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ImagendeMoto(
-                url = motos.imagenesPrincipales[0],
+
+            AsyncImage(
+                model = moto.imagenesPrincipales[0],
                 modifier = Modifier
                     .height(200.dp) // Set a fixed height for the image
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                contentDescription = "Moto image"
             )
         }
     }

@@ -1,5 +1,6 @@
 package com.straccion.appmotos1.presentation.screens.vistainicio
 
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -22,11 +23,17 @@ class VistaInicioViewModel @Inject constructor(
     private val authUsesCases: AuthUsesCases,
     private val obtenerMotosUsesCase: ObtenerMotosUsesCase
 ): ViewModel() {
+    //guardar estado del lazy para volver a donde selecciono la moto
+    val gridState = mutableStateOf(LazyGridState())
 
     //valida el ingreso a sesion
     var loginResponse by mutableStateOf<Response<FirebaseUser>?>(null)
         private set
 
+    // Todas las motos
+    private var _motosOriginales: List<CategoriaMotos>? = null
+    val motosOriginales: List<CategoriaMotos>?
+        get() = _motosOriginales
 
     //obtener las motos a mostrar
     private val _motosResponse = MutableStateFlow<Response<List<CategoriaMotos>>>(Response.Success(emptyList()))
@@ -40,6 +47,9 @@ class VistaInicioViewModel @Inject constructor(
     init {
         login()
     }
+
+
+
     private fun login() = viewModelScope.launch {
         loginResponse = Response.Loading
         val result = authUsesCases.login()
@@ -53,6 +63,10 @@ class VistaInicioViewModel @Inject constructor(
                 when (response) {
                     is Response.Success -> {
                         _allMotos.value = response.data
+                        // Guardar la lista original solo si aún no está guardada
+                        if (_motosOriginales == null) {
+                            _motosOriginales = response.data
+                        }
                         filterMotos()
                     }
                     else -> _motosResponse.value = response

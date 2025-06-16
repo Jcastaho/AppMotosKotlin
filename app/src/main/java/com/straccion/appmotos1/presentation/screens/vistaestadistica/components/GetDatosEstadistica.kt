@@ -1,6 +1,7 @@
 package com.straccion.appmotos1.presentation.screens.vistaestadistica.components
 
 import android.widget.Toast
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -12,6 +13,7 @@ import com.straccion.appmotos1.presentation.screens.vistaestadistica.Estadistica
 
 @Composable
 fun GetDatosEstadistica(
+    paddingValues: PaddingValues,
     viewModel: EstadisticaViewModel = hiltViewModel()
 ) {
     val motosResponse by viewModel.motos.collectAsState()

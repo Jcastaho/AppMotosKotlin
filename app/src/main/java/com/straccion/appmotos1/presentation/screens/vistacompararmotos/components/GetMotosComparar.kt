@@ -2,6 +2,7 @@ package com.straccion.appmotos1.presentation.screens.vistacompararmotos.componen
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,21 +19,20 @@ import com.straccion.appmotos1.presentation.screens.vistacompararmotos.CompararM
 
 @Composable
 fun GetMotosComparar(
+    paddingValues: PaddingValues,
     viewModel: CompararMotosViewModel = hiltViewModel(),
 ) {
     val motosResponse by viewModel.motosResponse.collectAsState()
     val context = LocalContext.current
 
 
-    val seleccionados by viewModel.motosSeleccionadas.collectAsState()
-
     when (val response = motosResponse) {
         Response.Loading -> {
             DefaultProgressBar()
         }
         is Response.Success -> {
-            val motos = response.data
-            LazyColumn {
+            val seleccionados by viewModel.motosSeleccionadas.collectAsState()
+            LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 item {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
