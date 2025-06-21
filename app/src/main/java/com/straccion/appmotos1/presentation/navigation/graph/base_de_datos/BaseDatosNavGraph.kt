@@ -14,6 +14,7 @@ import com.straccion.appmotos1.presentation.navigation.screen.base_de_datos.NavM
 import com.straccion.appmotos1.presentation.screens.vistabasededatos.BaseDatosScreen
 import com.straccion.appmotos1.presentation.screens.vistabasededatos.agregar.database_agregar.AggRegistroScreen
 import com.straccion.appmotos1.presentation.screens.vistabasededatos.agregar.database_agregar_manual.AgregarRegistroManualScreen
+import com.straccion.appmotos1.presentation.screens.vistabasededatos.agregar.database_agregar_manual.SubirImagenesScreen
 import com.straccion.appmotos1.presentation.screens.vistabasededatos.agregar.database_cambios_realizados.CambiosRealizadosScreen
 import com.straccion.appmotos1.presentation.screens.vistabasededatos.eliminar_registros.ElimRegistroScreen
 import com.straccion.appmotos1.presentation.screens.vistabasededatos.modificar.database_modificar.ModRegistroScreen
@@ -36,9 +37,44 @@ fun NavGraphBuilder.BaseDatosNavGraph(navHostController: NavHostController) {
             composable(route = NavAgregarRegistroScreen.AgregarRegistro.route) {
                 AggRegistroScreen(navHostController)
             }
-            composable(route = NavAgregarRegistroScreen.RegistrarMotoManual.route) {
-                AgregarRegistroManualScreen(navHostController)
+            // 2. NUEVA PANTALLA: Subir Imágenes. Recibe nombre y categoría.
+            composable(
+                route = NavAgregarRegistroScreen.SubirImagenes.route,
+                arguments = listOf(
+                    navArgument("nombreMoto") { type = NavType.StringType },
+                    navArgument("categoria") { type = NavType.StringType },
+                    navArgument("marca") { type = NavType.StringType },
+                    navArgument("fabricante") { type = NavType.StringType }
+                )
+            ) {
+                // Aquí va la pantalla para seleccionar las fotos
+                SubirImagenesScreen(navController = navHostController)
             }
+
+            // 3. NUEVA PANTALLA: Formulario final. Recibe todas las URLs.
+            composable(
+                route = NavAgregarRegistroScreen.FormularioFinal.route,
+                arguments = listOf(
+                    navArgument("nombreMoto") { type = NavType.StringType },
+                    navArgument("principales") { type = NavType.StringType },
+                    navArgument("caracteristicas") { type = NavType.StringType },
+                    navArgument("colores") { type = NavType.StringType },
+                    // Los argumentos para las imágenes por color son opcionales
+                    navArgument("imagenesColores1") { type = NavType.StringType; nullable = true },
+                    navArgument("imagenesColores2") { type = NavType.StringType; nullable = true },
+                    navArgument("imagenesColores3") { type = NavType.StringType; nullable = true },
+                    navArgument("imagenesColores4") { type = NavType.StringType; nullable = true },
+                    navArgument("imagenesColores5") { type = NavType.StringType; nullable = true },
+                    navArgument("imagenesColores6") { type = NavType.StringType; nullable = true },
+                )
+            ) {
+                // Aquí va la pantalla del formulario que te di primero
+                AgregarRegistroManualScreen(navHostController = navHostController)
+            }
+//            composable(route = NavAgregarRegistroScreen.RegistrarMotoManual.route) {
+//                SubirImagenesScreen(navHostController)
+//              //  AgregarRegistroManualScreen(navHostController)
+//            }
             composable(route = NavAgregarRegistroScreen.RegistrarMotoWebScrapping.route) {
                 CambiosRealizadosScreen()
             }

@@ -172,7 +172,15 @@ fun VistaAggRegistro(
                                 .align(Alignment.CenterHorizontally),
                             text = "Registrar Moto Manual",
                             onClick = {
-                                navHostController.navigate(NavAgregarRegistroScreen.RegistrarMotoManual.route)
+                                navHostController.navigate(
+                                    NavAgregarRegistroScreen.SubirImagenes.createRoute(
+                                        nombreMoto = nombreMotoaRegistrar,
+                                        categoria = categoriaText.second,
+                                        marca =   marcaText.second,
+                                        fabricante = fabricanteText.second
+                                    )
+                                )
+                             //   navHostController.navigate(NavAgregarRegistroScreen.RegistrarMotoManual.route)
                             },
                             enabled = if(nombreMotoaRegistrar != "" &&
                                 categoriaText.second != "" &&
